@@ -2,6 +2,7 @@
   "version": "0.0.1",
   "configurations": [
     { "name": "racing-site-v1", "url": "http://localhost:8765", "port": 8765 },
-    { "name": "racing-site-v2", "url": "http://localhost:8766", "port": 8766 }
+    { "name": "racing-site-v2", "url": "http://localhost:8766", "port": 8766 },
+    { "name": "racing-site-v3", "url": "http://localhost:8767", "port": 8767 }
   ]
 }

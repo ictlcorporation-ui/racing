@@ -65,3 +65,11 @@
 - Scroll (pin 260vh): fundal crem→carbon, hero→card, cască pe cap, card mic alb-negru cu video „Mesaj de la Mihai” (Seedance image-to-video din poza reală, draft 480p, 7.5 cr), marquee serif roșu + outline, semnătura (placeholder, stroke roșu).
 - Lecții: uniformele custom trebuie DECLARATE în fragmentShader; #hero nu are voie să aibă height fix (blochează pin spacer-ul); modelul Tripo are fața pe axa X → pre-rotație -π/2.
 - De la Mihai: semnătura reală (poză pe hârtie albă), un portret frontal studio ar fi ideal pentru hero.
+
+## Site v3 (2026-09-09) — „De la portret la podium” (ALES după respingerea v2)
+- Folder: site-v3/ (server: python3 site-v3/serve.py 8767). Film în build/film2/.
+- Mecanism: 5 clipuri Seedance 2.0, fiecare cu start_image = ultimul cadru al clipului anterior și END_IMAGE = următoarea POZĂ REALĂ. Mihai și mașina sunt reale la fiecare capăt de capitol. Fără image-references (rup joncțiunea).
+- Lanț: mihai-portrait → mihai-cockpit → act-dust-rear → act-jump → act-hairpin → crew-flag. SSIM joncțiuni: 0.76 / 0.87 / 0.82 / 0.82, verificate vizual.
+- Draft 480p: 6 clipuri × 7.5 = 45 cr (unul fără end-frame, aruncat). Master 720p: 5 × 22.5 ≈ 112 cr, doar cu aprobare.
+- Pagină: motor canvas cu ImageBitmap (engine.md), 301 cadre 1280w, beat-uri ca note de traseu, header adaptiv, seam spre carbon, secțiunile v1 sub film.
+- Scripturi: build/film2/run-chain.sh (lanțul cu END), build/chain-ref.sh (suportă END= și refs).
