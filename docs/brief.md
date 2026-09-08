@@ -57,3 +57,11 @@
 - Server local: python3 site/serve.py 8765 → http://localhost:8765
 - Verificare: build/shots/*.png (desktop + mobil), jank max 18.8ms (PASS).
 - De completat de la Mihai: bio, rezultate etape 2–7 2026, socials (Instagram/Facebook), e-mail contact, sponsorii confirmați.
+
+## Site v2 (2026-09-09) — hero „ca Lando”, WebGL + Higgsfield
+- Folder: site-v2/ (server: python3 site-v2/serve.py 8766). v1 rămâne în site-v1/ (tag git v1).
+- Hero: portret real Mihai decupat (Higgsfield background remover, 1 cr) + cască 3D reală (Nano Banana Pro 3 vederi = 6 cr → Tripo H3.1 image-to-3D = 9 cr; 56 MB → 2.8 MB optimizat + 265 KB low-poly pentru wireframe).
+- Three.js: wireframe + „lanternă” la mouse (shader mask pe gl_FragCoord) + materializare la scroll (uReveal), parallax cap/cască/topo.
+- Scroll (pin 260vh): fundal crem→carbon, hero→card, cască pe cap, card mic alb-negru cu video „Mesaj de la Mihai” (Seedance image-to-video din poza reală, draft 480p, 7.5 cr), marquee serif roșu + outline, semnătura (placeholder, stroke roșu).
+- Lecții: uniformele custom trebuie DECLARATE în fragmentShader; #hero nu are voie să aibă height fix (blochează pin spacer-ul); modelul Tripo are fața pe axa X → pre-rotație -π/2.
+- De la Mihai: semnătura reală (poză pe hârtie albă), un portret frontal studio ar fi ideal pentru hero.
