@@ -74,14 +74,14 @@
   #hero .msg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:62% 30%;opacity:0;pointer-events:none}
   #hero .frame .gray{position:absolute;inset:0;background:var(--cream);mix-blend-mode:saturation;opacity:0;pointer-events:none}
   #hero .frame .tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,.0),rgba(17,17,17,.35));opacity:0;pointer-events:none}
-  #hero .t1,#hero .t2{position:absolute;font-weight:900;font-variation-settings:"wdth" 124;font-size:clamp(64px,12vw,190px);line-height:.82;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;color:var(--ink);will-change:transform;pointer-events:none}
+  #hero .t1,#hero .t2{position:absolute;font-weight:900;font-variation-settings:"wdth" 124;font-size:clamp(56px,9.5vw,150px);line-height:.82;letter-spacing:-.04em;text-transform:uppercase;white-space:nowrap;color:var(--ink);will-change:transform;pointer-events:none}
   #hero .t1{left:var(--gutter);top:13vh;z-index:0}
   #hero .t2{right:var(--gutter);bottom:7vh;text-align:right;z-index:0}
   #hero .t2 .c:first-child{color:var(--red)}
   .split .c{display:inline-block;will-change:transform}
-  #hero .sub{position:absolute;left:var(--gutter);bottom:12vh;max-width:380px;font-family:var(--font-m);font-size:12px;letter-spacing:.12em;text-transform:uppercase;line-height:1.7;color:var(--ink-soft)}
+  #hero .sub{position:absolute;left:var(--gutter);bottom:30vh;max-width:380px;font-family:var(--font-m);font-size:12px;letter-spacing:.12em;text-transform:uppercase;line-height:1.7;color:var(--ink-soft)}
   #hero .sub b{color:var(--red);font-weight:600}
-  #hero .card{position:absolute;right:var(--gutter);bottom:12vh;width:230px;padding:14px 16px;background:rgba(255,255,255,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(20,20,20,.12);border-radius:6px;font-size:12px;line-height:1.5;color:var(--ink)}
+  #hero .card{position:absolute;right:var(--gutter);bottom:30vh;width:230px;padding:14px 16px;background:rgba(255,255,255,.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(20,20,20,.12);border-radius:6px;font-size:12px;line-height:1.5;color:var(--ink)}
   #hero .card .k{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gravel);margin-bottom:8px}
   #hero .card .v{font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.1}
   #hero .card .d{margin-top:6px;color:var(--ink-soft)}
@@ -332,7 +332,7 @@
     </svg>
     <h1 class="t1 split" data-split>MIHAI</h1>
     <div class="t2 split" data-split>MANOLE</div>
-    <div class="torchhint"><i></i> Plimbă mouse-ul peste cască</div>
+    
     <div class="sub">Pilot de raliu · Campionatul Național<br>Škoda Fabia Rally2 Evo · <b>#69</b><br>Copilot: Florin Dorca</div>
     <div class="card" id="nextcard">
       <div class="k">Următoarea cursă</div>
@@ -340,7 +340,7 @@
       <div class="d" id="nc-date">—</div>
       <div class="cd"><span id="nc-days">—</span><small>zile</small></div>
     </div>
-    <div class="hint"><i></i> Derulează</div>
+    <div class="hint"><i></i> Plimbă mouse-ul peste cască · Derulează</div>
     <div class="cursor" id="cursor"></div>
   </div>
 </section>
@@ -618,6 +618,7 @@ const camera = new THREE.PerspectiveCamera(28, 1, 10, 20000);
 const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-400, 600, 800); scene.add(key);
 scene.add(new THREE.AmbientLight(0xffffff, .35));
 const helmetGroup = new THREE.Group(); scene.add(helmetGroup);
+const occluder = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 24), new THREE.MeshBasicMaterial({ colorWrite:false })); occluder.renderOrder = 0; occluder.scale.setScalar(0.001); scene.add(occluder);
 const U = { mouse:{value:new THREE.Vector2(-9999,-9999)}, radius:{value:140}, reveal:{value:0}, res:{value:new THREE.Vector2(1,1)} };
 let W=1,H=1, headX=0, headY=0, headR=100;
 function layout(){
@@ -626,16 +627,17 @@ function layout(){
   camera.aspect = W/H; camera.position.set(0,0,(H/2)/Math.tan(THREE.MathUtils.degToRad(14))); camera.updateProjectionMatrix();
   // head centre in stage px (derived from the cutout: head at 27% x, 21% y of the cutout, cutout = 92% of H, ratio 980/1366)
   const ph = portrait.clientHeight || H*0.92, pw = ph*980/1366, left = W/2 - pw/2;
-  headX = left + pw*0.27; headY = (H - ph) + ph*0.205; headR = pw*0.37/2;
+  headX = left + pw*0.275; headY = (H - ph) + ph*0.19; headR = pw*0.345/2;
   U.res.value.set(W*renderer.getPixelRatio(), H*renderer.getPixelRatio()); U.radius.value = Math.max(90, H*0.16)*renderer.getPixelRatio();
   placeHelmet();
 }
-const helmetState = { drop:0.30, yaw:-0.55, pitch:0.08, scale:1.40, px:0, py:0 };
+const helmetState = { drop:0.12, yaw:-0.62, pitch:0.10, scale:1.34, px:0, py:0 };
 const PRE_RY = Q.get('ry') !== null ? +Q.get('ry') : -Math.PI/2;
 function placeHelmet(){
-  const size = headR*2*1.28*helmetState.scale;
+  const size = headR*2*helmetState.scale;
   helmetGroup.scale.setScalar(size / helmetBaseSize);
-  helmetGroup.position.set(headX - W/2 + helmetState.px, (H/2 - headY) + headR*0.22 + helmetState.drop*headR*0.9 + helmetState.py, 60);
+  helmetGroup.position.set(headX - W/2 + helmetState.px, (H/2 - headY) + headR*0.10 + helmetState.drop*headR*1.2 + helmetState.py, 10);
+  occluder.position.set(headX - W/2 + helmetState.px, (H/2 - headY) + helmetState.py, -headR*0.25); occluder.scale.setScalar(headR*0.90);
   helmetGroup.rotation.set(helmetState.pitch, helmetState.yaw, 0);
 }
 let helmetBaseSize = 1, helmetReady = false;
@@ -783,6 +785,8 @@ Promise.all([...critical.map(src => new Promise(res => { const im = new Image();
       setTimeout(() => { placeHelmet(); renderer.render(scene, camera); window.__ready = true; }, 400); });
   } else {
     const tl = intro(); ScrollTrigger.refresh(); tl.eventCallback('onComplete', () => { window.__ready = true; });
+    if (document.hidden) tl.progress(1);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && tl.progress() < 1) tl.progress(1); }, { once:true });
   }
 });
 let last = performance.now(), maxD = 0;
