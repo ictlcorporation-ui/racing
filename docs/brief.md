@@ -127,3 +127,9 @@
 - Motor: scene pe canvas cu tăieturi dure + „punch” de zoom la tăietură, flash scurt, mișcare de cameră pe fiecare poză reală, benzi cinematice, secvența cu casca (61 cadre din build/film7/ch1, Kling 4K, cu mijlocul comprimat ×0.2). Overlays de probă în stil cronometraj.
 - Secțiuni: Sezonul 2026 (calendar + palmares), Echipajul, banda orizontală „Pe probe” (10 poze reale), Parteneri, footer.
 - Verificat: desktop 8 poziții, mobil 4, jank max 18 ms.
+
+## site-final v2 (2026-09-09) — motor cu tranziții desenate + cinemagrafe
+- film.js: scene pe canvas; tranziții: „visor” (zoom în vizieră + cerc), „whip” (pan cu dâră), „wipe” (diagonală cu muchie roșie), „shutter” (3 benzi). Secvența cu casca (61 cadre). Benzi cinematice, flash la tăietură.
+- Cinemagrafe Kling 4K din pozele reale (cameră fixă): portrait, cockpit, dust, podium (ping-pong 10 s), wet (redare o dată, mașina se mișcă). În assets/cine, 1600px. Fallback la poze dacă lipsesc.
+- Banda roșie cu mașina decupată (background remover) traversând la scroll; titluri cu clip reveal; parallax în banda foto.
+- Credite: 5 cinemagrafe × 30 + decupaj 1 = 151. Jank max 39 ms.

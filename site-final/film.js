@@ -13,7 +13,7 @@
   /* ---------- sources ---------- */
   const IMG = {}, VID = {};
   const STILL = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', wet:'assets/img/s-wet.jpg', podium:'assets/img/s-podium.jpg' };
-  const LOOP = { portrait:'assets/cine/portrait.mp4', cockpit:'assets/cine/cockpit.mp4', dust:'assets/cine/dust.mp4', wet:'assets/cine/wet.mp4', podium:'assets/cine/podium.mp4' };
+  const ONCE = { wet:true }; const LOOP = { portrait:'assets/cine/portrait.mp4', cockpit:'assets/cine/cockpit.mp4', dust:'assets/cine/dust.mp4', wet:'assets/cine/wet.mp4', podium:'assets/cine/podium.mp4' };
   const FOC = { portrait:[.72,.40], helmet:[.72,.40], cockpit:[.42,.45], dust:[.55,.55], wet:[.55,.55], podium:[.5,.28] };
   const HF = 61; const hb = new Map(), hblobs = [], decoding = new Set();
 
@@ -101,7 +101,7 @@
     if (tr && d < TLEN){ inTr = true; transition(tr, si-1, si, d/TLEN); }
     else if (si === 1 && d < .01){ drawScene(1, 0); }
     else { const punch = (si>0 && !tr) ? (1 - eout(clamp(t/.06,0,1)))*.05 : 0; drawScene(si, t, punch); }
-    if (si !== lastScene){ if (lastScene >= 0 && JUMP === null && !tr){ flash.style.opacity = .5; setTimeout(() => flash.style.opacity = 0, 40); } lastScene = si; for (const k in VID){ const v = VID[k]; if (k === s.key){ v.play && v.play().catch(()=>{}); } else v.pause && v.pause(); } }
+    if (si !== lastScene){ if (lastScene >= 0 && JUMP === null && !tr){ flash.style.opacity = .5; setTimeout(() => flash.style.opacity = 0, 40); } lastScene = si; for (const k in VID){ const v = VID[k]; if (k === s.key){ if (ONCE[k]) v.currentTime = 0; v.play && v.play().catch(()=>{}); } else v.pause && v.pause(); } }
     setOverlays(si, t, inTr);
     if (ro.textContent !== s.label) ro.textContent = s.label; robar.style.width = (progress*100).toFixed(1)+'%';
     const end = clamp((progress-.94)/.06, 0, 1); bars.forEach((b,i) => b.style.transform = `translateY(${(i? 1:-1)*end*100}%)`);
@@ -111,7 +111,7 @@
   /* ---------- loading ---------- */
   const ldbar = document.getElementById('ldbar'), ldnum = document.getElementById('ldnum'); let done = 0; const total = Object.keys(STILL).length + HF;
   const prog = () => { done++; const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = p+'%'; };
-  function loadLoops(){ if (RM) return; for (const k in LOOP){ const v = document.createElement('video'); v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin='anonymous'; v.src = LOOP[k];
+  function loadLoops(){ if (RM) return; for (const k in LOOP){ const v = document.createElement('video'); v.muted = true; v.loop = !ONCE[k]; v.playsInline = true; v.preload = 'auto'; v.crossOrigin='anonymous'; v.src = LOOP[k];
       v.addEventListener('loadeddata', () => { VID[k] = v; lastP = -1; }); v.addEventListener('error', () => {}); v.load(); } }
   window.__film = { ready: false };
   (async () => {
