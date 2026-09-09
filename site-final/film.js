@@ -14,7 +14,7 @@
   const IMG = {}, VID = {};
   const STILL = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', jump:'assets/img/s-jump.jpg', hairpin:'assets/img/s-hairpin.jpg', wet:'assets/img/s-wet.jpg', night:'assets/img/s-night.jpg', crowd:'assets/img/s-crowd.jpg', podium:'assets/img/s-podium.jpg' };
   const ONCE = { wet:true }; const LOOP = { portrait:'assets/cine/portrait.mp4', cockpit:'assets/cine/cockpit.mp4', dust:'assets/cine/dust.mp4', wet:'assets/cine/wet.mp4', podium:'assets/cine/podium.mp4' };
-  const FOC = { portrait:[.72,.40], helmet:[.72,.40], cockpit:[.42,.45], dust:[.55,.55], jump:[.5,.55], hairpin:[.55,.5], wet:[.55,.55], night:[.55,.35], crowd:[.5,.5], podium:[.5,.3] };
+  const FOC = { portrait:[.60,.52], helmet:[.60,.52], cockpit:[.42,.45], dust:[.55,.55], jump:[.5,.55], hairpin:[.55,.5], wet:[.55,.55], night:[.55,.35], crowd:[.5,.5], podium:[.5,.3] };
   const CONTAIN = { dust:1, jump:1, hairpin:1, wet:1, crowd:1, podium:1 }; // portrait screens: show the whole frame
   const RATE = { portrait:.45, cockpit:.35, podium:.8, dust:.8 };
   const HF = 61; const hb = new Map(), hblobs = [], decoding = new Set();
