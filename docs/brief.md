@@ -91,3 +91,8 @@
 - ch3: din service park (larg) → pietriș spate; mașina mereu la distanță. Seam ch3→ch4 SSIM 0.87.
 - Hero: wordmark mic sus-stânga (portretul rămâne curat).
 - Lecție: modelul video strică textele când camera se apropie la mijlocul clipului; close-up-urile doar la capete (ancore reale).
+
+## Site v5 (2026-09-09) — poveste din imagini curate, zero video la mijloc (ALES după v4)
+- Folder: site-v5/ (server: python3 site-v5/serve.py 8768). Motor „stills”: 7 ancore + 61 cadre din ch1 (casca, cameră fixă), zoom/dissolve/whip cu praf și confetti desenate în canvas, totul determinist pe scroll.
+- Motiv: video generat strică textele mici în cadrele din mijloc; la scroll fiecare cadru e o poză înghețată → doar imagini verificate.
+- Cost: 0 credite. Jank max 29 ms.
