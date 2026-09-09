@@ -682,7 +682,8 @@
   }
 
   resize();
-  loadFilm().then(() => {
+  const stillReady = (still.decode ? still.decode() : Promise.resolve()).catch(()=>{});
+  loadFilm().then(() => stillReady).then(() => {
     // warm frame 0 then start
     return new Promise(res => { createImageBitmap(blobs[0]).then(b => { bitmaps.set(0,b); drawFrame(0,true); res(); }); });
   }).then(() => document.fonts ? document.fonts.ready : null).then(() => {
