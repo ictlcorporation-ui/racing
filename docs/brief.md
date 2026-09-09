@@ -107,3 +107,11 @@
 - Ancore: cort negru cu Budureasca (fără WRC), mașina pe roți (fără cric/roți sub ea), NEXT ENERGY furnizare (text, fără hexagon), incar cu 2 roți vizibile + nume pe geam scrise cu PIL, ecuson „Mihai Manole” copiat deterministic.
 - Kling 4K: ch1 regenerat o dată (etichetă albă inventată pe piept) cu interdicție explicită pentru etichete noi. ch5/ch6 din film5. Seam ch1→ch2 0.96.
 - Credite: ancore ~14 + 5 clipuri × 30 = 150.
+
+## Film v7 (2026-09-09) — „totul real la capete” (după respingerea scenei AI din service park)
+- Hero: A2 = portretul real cu fundal estompat/întunecat (build/hero-real). Fără nicio editare generativă în deschidere.
+- ch1: A2 → A2+cască (edit minimal Nano Banana doar casca; Kling 4K cu ambele capete). Drift de text ~1s la mijloc → trecut rapid prin „speed map” în manifest ([20,47,0.3]).
+- ch2 (mers la mașină) ELIMINAT: Kling a inventat o mașină albă. Tăietură directă cască → cockpit real.
+- ch3–ch6: cockpit real → praf Maramureș real → săritură reală → ac de păr real → podium real; Kling 4K, mașina la distanță. Toate verificate.
+- Site: beat-uri repoziționate departe de subiect, 5 capitole, hero cu textele în stânga.
+- Credite v7: ch1 ×2 (60) + edit cască 2 + ch2–ch6 (150) = ~212.
