@@ -321,12 +321,14 @@
       <div class="hint"><i></i> Derulează · filmul pornește</div>
     </div>
 
-    <div class="beat left" data-in="0.13" data-peak="0.17" data-out="0.21"><div class="glass"><div class="pn">Capitolul 1 · casca</div><h2>Casca <em>sus</em>.</h2><p>Înainte de start, totul e deja în cap: fiecare curbă, fiecare notă.</p></div></div>
-    <div class="beat right" data-in="0.215" data-peak="0.25" data-out="0.30"><div class="glass"><div class="pn">Capitolul 2 · la volan</div><h2>Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
-    <div class="beat left" data-in="0.36" data-peak="0.40" data-out="0.45"><div class="glass"><div class="pn">Capitolul 3 · S4 lung</div><h2>Pietrișul nu <em>iartă</em>.</h2><p>Raliul Maramureșului 2026. Locul 2 la general, la deschiderea sezonului.</p></div></div>
-    <div class="beat right" data-in="0.56" data-peak="0.60" data-out="0.65"><div class="glass"><div class="pn">Capitolul 4 · săritură</div><h2>Ține <em>drept</em>.</h2><p>Patru roți în aer. Nota spunea „săritură, ține”. Exact așa.</p></div></div>
-    <div class="beat left" data-in="0.76" data-peak="0.80" data-out="0.85"><div class="glass"><div class="pn">Capitolul 5 · D2 strâns</div><h2>Acul de <em>păr</em>.</h2><p>Frână târziu, întoarce tot, pe gaz. Nu tăia.</p></div></div>
-    <div class="beat topleft" data-in="0.93" data-peak="0.985" data-out="2"><div class="glass"><div class="pn">Sosire · podium</div><h2>Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026. Restul se scrie pe probele care urmează.</p></div></div>
+    <div class="beat left" data-at="helmeton" data-off="-14" data-span="14"><div class="glass"><div class="pn">Capitolul 1 · casca</div><h2>Casca <em>sus</em>.</h2><p>Înainte de start, totul e deja în cap: fiecare curbă, fiecare notă.</p></div></div>
+    <div class="beat right" data-at="cockpit" data-off="16" data-span="14"><div class="glass"><div class="pn">Capitolul 2 · la volan</div><h2>Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
+    <div class="beat left" data-at="dust" data-off="0" data-span="16"><div class="glass"><div class="pn">PS1 · Maramureș · pietriș</div><h2>Pietrișul nu <em>iartă</em>.</h2><p>Raliul Maramureșului 2026. Locul 2 la general, la deschiderea sezonului.</p></div></div>
+    <div class="beat right" data-at="jump" data-off="0" data-span="16"><div class="glass"><div class="pn">PS2 · pădure · asfalt</div><h2>Ține <em>drept</em>.</h2><p>Patru roți în aer. Nota spunea „săritură, ține”. Exact așa.</p></div></div>
+    <div class="beat left" data-at="hairpin" data-off="0" data-span="16"><div class="glass"><div class="pn">PS3 · ac de păr</div><h2>D2 <em>strâns</em>.</h2><p>Frână târziu, întoarce tot, pe gaz. Nu tăia.</p></div></div>
+    <div class="beat right" data-at="wet" data-off="0" data-span="16"><div class="glass"><div class="pn">PS4 · munte · asfalt ud</div><h2>Ploaia schimbă <em>tot</em>.</h2><p>Aceleași note, alt grip. Aici se câștigă secundele.</p></div></div>
+    <div class="beat left" data-at="crowd" data-off="0" data-span="16"><div class="glass"><div class="pn">Sosire · oraș</div><h2>Ultimul <em>timp</em>.</h2><p>Cronometrul se oprește. Publicul nu.</p></div></div>
+    <div class="beat topleft" data-at="podium" data-off="-2" data-span="40" data-hold="1"><div class="glass"><div class="pn">Podium</div><h2>Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026. Restul se scrie pe probele care urmează.</p></div></div>
 
     <div class="fade" id="fade"></div>
   </div>
@@ -587,7 +589,7 @@
   const B_AHEAD = 12, B_KEEP = 16, MAX_DECODES = 4; let bmpCenter = -999, displayed = -1;
   let target = 0, current = 0, progress = 0, focusX = 0.5;
   // frames that should pass quickly (e.g. mid-gesture): [from, to, weight<1]
-  let SPEED = []; let cum = null;
+  let SPEED = []; let cum = null; let ANCH = []; const abm = {};
   function buildMap(){ cum = new Float32Array(FRAME_COUNT); let acc = 0; for (let i=0;i<FRAME_COUNT;i++){ let w = 1; for (const r of SPEED) if (i>=r[0] && i<=r[1]) w = r[2]; acc += w; cum[i] = acc; } for (let i=0;i<FRAME_COUNT;i++) cum[i] /= acc; }
   function frameAt(p){ if (!cum) return p*(FRAME_COUNT-1); let lo=0, hi=FRAME_COUNT-1; while (lo<hi){ const m=(lo+hi)>>1; if (cum[m] < p) lo=m+1; else hi=m; } return lo; }
   const CHAPTERS = [[0,'Start · portret'],[.10,'casca · viziera sus'],[.21,'PS1 · la volan'],[.36,'S4 lung · pietriș'],[.56,'săritură · ține'],[.76,'D2 strâns · ac de păr'],[.93,'Sosire · podium']];
@@ -600,6 +602,7 @@
     if (!force && i === displayed) return; displayed = i;
     const cw = cv.width, ch = cv.height, s = Math.max(cw/b.width, ch/b.height), w = b.width*s, h = b.height*s;
     ctx.drawImage(b, (cw-w)*focusX, (ch-h)/2, w, h);
+    for (const a of ANCH){ const ab = abm[a.name]; if (!ab) continue; const d = Math.abs(current - a.f); if (d >= 3) continue; const al = 1 - Math.max(0, d-1)/2; const s2 = Math.max(cw/ab.width, ch/ab.height), w2 = ab.width*s2, h2 = ab.height*s2; ctx.globalAlpha = al; ctx.drawImage(ab, (cw-w2)*focusX, (ch-h2)/2, w2, h2); ctx.globalAlpha = 1; }
     sampleTop();
   }
   function nearestBitmap(i){ for (let d=1; d<FRAME_COUNT; d++){ if (bitmaps.has(i-d)) return bitmaps.get(i-d); if (bitmaps.has(i+d)) return bitmaps.get(i+d); } return null; }
@@ -622,19 +625,20 @@
   let filmActive = true;
 
   /* beats */
-  const beats = Array.from(document.querySelectorAll('.beat')).map(el => ({ el, in:+el.dataset.in, peak:+el.dataset.peak, out:+el.dataset.out }));
+  const beats = Array.from(document.querySelectorAll('.beat')).map(el => ({ el, in:+el.dataset.in, peak:+el.dataset.peak, out:+el.dataset.out, at: el.dataset.at, off:+(el.dataset.off||0), span:+(el.dataset.span||16), hold: !!el.dataset.hold }));
+  function anchorFrame(name){ const a = ANCH.find(x => x.name === name); return a ? a.f : -999; }
   function beatAlpha(b, p){ if (p < b.in || p > b.out) return 0; if (p < b.peak) return (p - b.in)/Math.max(1e-4, b.peak - b.in); if (b.out > 1.5) return 1; return 1 - (p - b.peak)/Math.max(1e-4, b.out - b.peak); }
   function tick(){
     try{
       const r = film.getBoundingClientRect(); progress = Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
       target = frameAt(progress);
       // portrait screens: keep Mihai in frame during the first two chapters, then centre on the car
-      const portraitScreen = innerWidth < innerHeight; const fx = portraitScreen ? (progress < .20 ? .72 : progress < .36 ? .42 : .50) : .5; if (fx !== focusX){ focusX = fx; if (displayed >= 0) drawFrame(displayed, true); }
+      const portraitScreen = innerWidth < innerHeight; const hf = anchorFrame('cockpit'); const fx = portraitScreen ? (current < hf - 1 ? .72 : current < hf + 40 ? .42 : .50) : .5; if (fx !== focusX){ focusX = fx; if (displayed >= 0) drawFrame(displayed, true); }
       current += (target - current) * (JUMP !== null ? 1 : 0.16); if (Math.abs(target - current) < .05) current = target;
       const idx = Math.round(current); ensureBitmaps(idx); drawFrame(idx, false);
-      for (const b of beats){ const a = beatAlpha(b, progress); b.el.style.opacity = a; if (b.el.id !== 'b-hero') b.el.style.transform = (b.el.classList.contains('center') ? 'translate(-50%,-50%) ' : '') + `translateY(${(1-a)*24}px)`; }
+      for (const b of beats){ let a; if (b.at){ const f0 = anchorFrame(b.at) + b.off; const d = current - f0; a = b.hold ? Math.max(0, Math.min(1, 1 + d/6)) : Math.max(0, 1 - Math.abs(d)/b.span); a = Math.min(1, a*1.6); } else a = beatAlpha(b, progress); b.el.style.opacity = a; if (b.el.id !== 'b-hero') b.el.style.transform = (b.el.classList.contains('center') ? 'translate(-50%,-50%) ' : '') + `translateY(${(1-a)*24}px)`; }
       // chapter readout + odometer
-      let ch = CHAPTERS[0]; for (const c of CHAPTERS) if (progress >= c[0]) ch = c; if (ro.textContent !== ch[1]) ro.textContent = ch[1];
+      let label = 'Start · portret'; for (const a of ANCH) if (current >= a.f - 2 && a.label) label = a.label; if (ro.textContent !== label) ro.textContent = label;
       robar.style.width = (progress*100).toFixed(1) + '%'; odo.textContent = (progress*KM).toFixed(2);
       // seam handoff
       still.style.opacity = Math.max(0, 1 - progress/0.035);
@@ -647,7 +651,8 @@
   const ldbar = document.getElementById('ldbar'), ldnum = document.getElementById('ldnum');
   async function loadFilm(){
     const m = await fetch('frames/manifest.json', { cache:'no-store' }).then(r => r.json());
-    FRAME_COUNT = m.count; FRAME_W = m.width; FRAME_H = m.height; SEAM = '#111111'; SPEED = m.speed || []; buildMap(); document.documentElement.style.setProperty('--seam', SEAM);
+    FRAME_COUNT = m.count; FRAME_W = m.width; FRAME_H = m.height; SEAM = '#111111'; ANCH = m.anchors || []; SPEED = (m.speed || []).concat(ANCH.filter(a=>a.f>0).map(a => [a.f-2, a.f+2, 3.0])); buildMap();
+    await Promise.all(ANCH.map(a => fetch(a.src).then(r => r.blob()).then(b => createImageBitmap(b)).then(b => { abm[a.name] = b; }).catch(()=>{}))); document.documentElement.style.setProperty('--seam', SEAM);
     let done = 0; const total = FRAME_COUNT; const CONC = 10; let next = 0;
     const firstReady = new Promise(res => { const t = setInterval(() => { if (blobs[0]){ clearInterval(t); res(); } }, 30); });
     async function worker(){ while (next < total){ const i = next++; try{ blobs[i] = await fetch(`frames/f_${String(i+1).padStart(4,'0')}.jpg`).then(r => r.blob()); }catch(e){} done++; if (done % 6 === 0 || done === total){ const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = 'FILM · '+p+'%'; } } }

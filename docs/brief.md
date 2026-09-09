@@ -115,3 +115,8 @@
 - ch3–ch6: cockpit real → praf Maramureș real → săritură reală → ac de păr real → podium real; Kling 4K, mașina la distanță. Toate verificate.
 - Site: beat-uri repoziționate departe de subiect, 5 capitole, hero cu textele în stânga.
 - Credite v7: ch1 ×2 (60) + edit cască 2 + ch2–ch6 (150) = ~212.
+
+## Film v7.1 (2026-09-09) — 7 clipuri, ancore reale suprapuse
+- Lanț: ch1 (portret→cască) | tăietură | ch3 cockpit→praf, ch4 →săritură, ch5 →ac de păr, ch6 →asfalt ud, ch7 →sosire oraș, ch8 →podium. 421 cadre la 1440.
+- Motor: manifest.anchors = pozele reale desenate peste film la cadrul de capitol (±2 cadre) + hold ×3 la scroll; speed map comprimă cadrele slabe (mijloc cască, trecere aproape ch7, morph steag ch8); beat-uri legate de ancore (data-at/off/span).
+- Credite: ch6–ch8 90.
