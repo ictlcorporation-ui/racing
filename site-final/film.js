@@ -12,21 +12,27 @@
 
   /* ---------- sources ---------- */
   const IMG = {}, VID = {};
-  const STILL = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', wet:'assets/img/s-wet.jpg', podium:'assets/img/s-podium.jpg' };
+  const STILL = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', jump:'assets/img/s-jump.jpg', hairpin:'assets/img/s-hairpin.jpg', wet:'assets/img/s-wet.jpg', night:'assets/img/s-night.jpg', crowd:'assets/img/s-crowd.jpg', podium:'assets/img/s-podium.jpg' };
   const ONCE = { wet:true }; const LOOP = { portrait:'assets/cine/portrait.mp4', cockpit:'assets/cine/cockpit.mp4', dust:'assets/cine/dust.mp4', wet:'assets/cine/wet.mp4', podium:'assets/cine/podium.mp4' };
-  const FOC = { portrait:[.72,.40], helmet:[.72,.40], cockpit:[.42,.45], dust:[.55,.55], wet:[.55,.55], podium:[.5,.28] };
+  const FOC = { portrait:[.72,.40], helmet:[.72,.40], cockpit:[.42,.45], dust:[.55,.55], jump:[.5,.55], hairpin:[.55,.5], wet:[.55,.55], night:[.55,.35], crowd:[.5,.5], podium:[.5,.3] };
+  const CONTAIN = { dust:1, jump:1, hairpin:1, wet:1, crowd:1, podium:1 }; // portrait screens: show the whole frame
+  const RATE = { portrait:.45, cockpit:.35, podium:.8, dust:.8 };
   const HF = 61; const hb = new Map(), hblobs = [], decoding = new Set();
 
   /* scenes on the 0..1 timeline */
   const SC = [
-    { a:0,   b:.15, key:'portrait', cam:[1.00,1.04, 0,0, 0,0], label:'Start' },
-    { a:.15, b:.33, key:'helmet',   cam:[1.04,1.04, 0,0, 0,0], label:'Casca', seq:true },
-    { a:.33, b:.50, key:'cockpit',  cam:[1.00,1.10, 0,-.02, 0,0], label:'La volan' },
-    { a:.50, b:.67, key:'dust',     cam:[1.12,1.00, .03,-.02, 0,0], label:'PS1 · pietriș' },
-    { a:.67, b:.84, key:'wet',      cam:[1.00,1.10, -.02,.02, 0,0], label:'PS2 · asfalt ud' },
-    { a:.84, b:1.0, key:'podium',   cam:[1.08,1.00, 0,0, .02,0], label:'Podium' } ];
+    { a:0,   b:.10, key:'portrait', cam:[1.00,1.04, 0,0, 0,0], label:'Start' },
+    { a:.10, b:.26, key:'helmet',   cam:[1.04,1.04, 0,0, 0,0], label:'Casca', seq:true },
+    { a:.26, b:.37, key:'cockpit',  cam:[1.00,1.08, 0,-.02, 0,0], label:'La volan' },
+    { a:.37, b:.47, key:'dust',     cam:[1.10,1.00, .03,-.02, 0,0], label:'PS1 · pietriș' },
+    { a:.47, b:.56, key:'jump',     cam:[1.00,1.12, 0,0, .02,-.02], label:'PS2 · pădure' },
+    { a:.56, b:.65, key:'hairpin',  cam:[1.12,1.00, -.03,.02, 0,0], label:'PS3 · ac de păr' },
+    { a:.65, b:.74, key:'wet',      cam:[1.00,1.08, -.02,.02, 0,0], label:'PS4 · asfalt ud' },
+    { a:.74, b:.82, key:'night',    cam:[1.06,1.00, 0,0, 0,0], label:'Start festiv' },
+    { a:.82, b:.90, key:'crowd',    cam:[1.00,1.10, 0,-.02, 0,0], label:'Sosire' },
+    { a:.90, b:1.0, key:'podium',   cam:[1.06,1.00, 0,0, .02,0], label:'Podium' } ];
   /* transitions: [progress start, length, type] applied at scene boundaries */
-  const TR = { 2:'visor', 3:'whip', 4:'wipe', 5:'shutter' };
+  const TR = { 2:'visor', 3:'whip', 4:'wipe', 5:'shutter', 6:'whip', 7:'wipe', 8:'whip', 9:'shutter' };
   const TLEN = .045;
 
   let progress = 0, lastP = -1, W = 0, H = 0, alive = true;
@@ -38,15 +44,17 @@
   function dims(b){ return b.videoWidth ? [b.videoWidth, b.videoHeight] : [b.width, b.height]; }
   function draw(key, z, px, py, alpha){
     const b = srcOf(key); if (!b) return; const [bw, bh] = dims(b);
-    const cw = cv.width, ch = cv.height, s = Math.max(cw/bw, ch/bh)*z, w = bw*s, h = bh*s;
-    const f = FOC[key] || [.5,.5]; const fx = portraitScreen() ? f[0] : lerp(.5, f[0], .3), fy = portraitScreen() ? f[1] : lerp(.5, f[1], .4);
+    const cw = cv.width, ch = cv.height; const contain = portraitScreen() && CONTAIN[key];
+    const s = (contain ? Math.min(cw/bw, ch/bh)*1.02 : Math.max(cw/bw, ch/bh))*z, w = bw*s, h = bh*s;
+    const f = FOC[key] || [.5,.5]; const fx = contain ? .5 : (portraitScreen() ? f[0] : lerp(.5, f[0], .3)), fy = contain ? .5 : (portraitScreen() ? f[1] : lerp(.5, f[1], .4));
     if (alpha !== undefined) ctx.globalAlpha = alpha;
+    if (contain){ ctx.save(); ctx.filter = 'blur(28px) brightness(.45)'; const s2 = Math.max(cw/bw, ch/bh)*1.1, w2=bw*s2, h2=bh*s2; ctx.drawImage(b, (cw-w2)/2, (ch-h2)/2, w2, h2); ctx.restore(); }
     ctx.drawImage(b, (cw-w)*fx + (px||0)*cw, (ch-h)*fy + (py||0)*ch, w, h); ctx.globalAlpha = 1;
   }
   function drawFrameBitmap(b, z, px, py){ const cw = cv.width, ch = cv.height, s = Math.max(cw/b.width, ch/b.height)*z, w = b.width*s, h = b.height*s; const f = FOC.helmet; const fx = portraitScreen()?f[0]:lerp(.5,f[0],.3), fy = portraitScreen()?f[1]:lerp(.5,f[1],.4); ctx.drawImage(b, (cw-w)*fx + (px||0)*cw, (ch-h)*fy + (py||0)*ch, w, h); }
 
   /* helmet sequence with compressed middle */
-  const Wt = []; for (let i=0;i<HF;i++) Wt.push(i>=20 && i<=47 ? .2 : 1); const CUM = []; let acc = 0; for (const w of Wt){ acc += w; CUM.push(acc); } for (let i=0;i<HF;i++) CUM[i] /= acc;
+  const Wt = []; for (let i=0;i<HF;i++) Wt.push(i>=20 && i<=47 ? .55 : 1); const CUM = []; let acc = 0; for (const w of Wt){ acc += w; CUM.push(acc); } for (let i=0;i<HF;i++) CUM[i] /= acc;
   function hFrame(t){ let lo=0, hi=HF-1; while (lo<hi){ const m=(lo+hi)>>1; if (CUM[m] < t) lo=m+1; else hi=m; } return lo; }
   function ensureH(c){ for (let i=Math.max(0,c-6); i<=Math.min(HF-1,c+6); i++){ if (hb.has(i)||decoding.has(i)||!hblobs[i]||decoding.size>4) continue; decoding.add(i); createImageBitmap(hblobs[i]).then(b=>{ decoding.delete(i); hb.set(i,b); lastP=-1; }).catch(()=>decoding.delete(i)); }
     for (const k of Array.from(hb.keys())) if (k<c-10||k>c+10){ hb.get(k).close(); hb.delete(k); } }
@@ -112,7 +120,7 @@
   const ldbar = document.getElementById('ldbar'), ldnum = document.getElementById('ldnum'); let done = 0; const total = Object.keys(STILL).length + HF;
   const prog = () => { done++; const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = p+'%'; };
   function loadLoops(){ if (RM) return; for (const k in LOOP){ const v = document.createElement('video'); v.muted = true; v.loop = !ONCE[k]; v.playsInline = true; v.preload = 'auto'; v.crossOrigin='anonymous'; v.src = LOOP[k];
-      v.addEventListener('loadeddata', () => { VID[k] = v; lastP = -1; }); v.addEventListener('error', () => {}); v.load(); } }
+      v.addEventListener('loadeddata', () => { v.playbackRate = RATE[k] || 1; VID[k] = v; lastP = -1; }); v.addEventListener('error', () => {}); v.load(); } }
   window.__film = { ready: false };
   (async () => {
     await Promise.all(Object.entries(STILL).map(([k,src]) => fetch(src).then(r=>r.blob()).then(b=>createImageBitmap(b)).then(b=>{ IMG[k]=b; prog(); })));
