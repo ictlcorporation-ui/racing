@@ -120,3 +120,10 @@
 - Lanț: ch1 (portret→cască) | tăietură | ch3 cockpit→praf, ch4 →săritură, ch5 →ac de păr, ch6 →asfalt ud, ch7 →sosire oraș, ch8 →podium. 421 cadre la 1440.
 - Motor: manifest.anchors = pozele reale desenate peste film la cadrul de capitol (±2 cadre) + hold ×3 la scroll; speed map comprimă cadrele slabe (mijloc cască, trecere aproape ch7, morph steag ch8); beat-uri legate de ancore (data-at/off/span).
 - Credite: ch6–ch8 90.
+
+## site-final (2026-09-09) — REFĂCUT DE LA ZERO după decizia clientului
+- Decizii: doar clipul cu casca e video AI; 6 scene (portret, cască, cockpit, PS1 pietriș, PS2 asfalt ud, podium); atmosferă întunecată.
+- Un singur folder: site-final/ (server: python3 site-final/serve.py 8770). Versiunile vechi în archive/.
+- Motor: scene pe canvas cu tăieturi dure + „punch” de zoom la tăietură, flash scurt, mișcare de cameră pe fiecare poză reală, benzi cinematice, secvența cu casca (61 cadre din build/film7/ch1, Kling 4K, cu mijlocul comprimat ×0.2). Overlays de probă în stil cronometraj.
+- Secțiuni: Sezonul 2026 (calendar + palmares), Echipajul, banda orizontală „Pe probe” (10 poze reale), Parteneri, footer.
+- Verificat: desktop 8 poziții, mobil 4, jank max 18 ms.

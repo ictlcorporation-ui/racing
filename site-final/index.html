@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mihai Manole — Pilot de raliu · #69</title>
+<meta name="description" content="Mihai Manole, pilot în Campionatul Național de Raliuri. Škoda Fabia Rally2 Evo, numărul 69, copilot Florin Dorca.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0B0B0C; --bg2:#141416; --line:rgba(241,237,227,.12); --fg:#F1EDE3; --mute:#8A857B; --red:#ED3029; --yellow:#FFD400;
+    --d:"Archivo",system-ui,sans-serif; --m:"JetBrains Mono",ui-monospace,monospace; --gut:clamp(18px,4vw,64px); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:auto}
+  body{background:var(--bg);color:var(--fg);font-family:var(--d);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  img{display:block;max-width:100%} a{color:inherit;text-decoration:none}
+  ::selection{background:var(--red);color:var(--fg)}
+  .mono{font-family:var(--m);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute)}
+  .big{font-weight:900;font-variation-settings:"wdth" 115;text-transform:uppercase;letter-spacing:-.03em;line-height:.88}
+  .big em{font-style:normal;color:var(--red)}
+
+  /* loader */
+  #loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;transition:opacity .6s,visibility .6s}
+  #loader.hide{opacity:0;visibility:hidden}
+  #loader .lg{font-weight:900;font-variation-settings:"wdth" 118;font-size:clamp(26px,4vw,44px);letter-spacing:-.02em;text-transform:uppercase}
+  #loader .lg span{color:var(--red)}
+  #loader .bar{width:min(280px,60vw);height:2px;background:#222;overflow:hidden}
+  #loader .bar i{display:block;height:100%;width:0;background:var(--red);transition:width .15s}
+
+  /* header */
+  #hdr{position:fixed;inset:0 0 auto 0;z-index:50;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:18px var(--gut);pointer-events:none;color:var(--fg)}
+  #hdr>*{pointer-events:auto}
+  #hdr .wm{font-weight:900;font-variation-settings:"wdth" 118;font-size:14px;line-height:.95;text-transform:uppercase}
+  #hdr .wm b{display:block;color:var(--red)}
+  #hdr .ro{text-align:center}
+  #hdr .ro .bar{margin:8px auto 0;width:120px;height:1px;background:rgba(241,237,227,.2);position:relative}
+  #hdr .ro .bar i{position:absolute;left:0;top:-1px;height:3px;width:0;background:var(--red)}
+  #hdr .right{display:flex;justify-content:flex-end;gap:14px;align-items:center}
+  #hdr .next{padding:10px 14px;background:var(--red);color:var(--fg);border-radius:4px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:800}
+  @media (max-width:820px){#hdr{grid-template-columns:1fr auto;background:linear-gradient(rgba(11,11,12,.7),transparent);padding-bottom:26px}#hdr .ro{display:none}}
+
+  /* film */
+  #film{position:relative;height:720vh}
+  #film .stage{position:sticky;top:0;height:100vh;overflow:hidden;background:#000}
+  #film canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #film .bars i{position:absolute;left:0;right:0;height:7vh;background:#000;z-index:3;transition:transform .5s}
+  #film .bars i:first-child{top:0} #film .bars i:last-child{bottom:0}
+  #film .grain{position:absolute;inset:0;pointer-events:none;opacity:.08;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:160px}
+  #film .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 58%,rgba(0,0,0,.5) 100%)}
+  #film .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4}
+  .ov{position:absolute;z-index:5;opacity:0;pointer-events:none;will-change:transform,opacity}
+  .ov .tag{font-family:var(--m);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow)}
+  .ov h2{margin-top:10px;font-size:clamp(40px,6.5vw,104px)}
+  .ov p{margin-top:12px;font-size:clamp(15px,1.3vw,19px);line-height:1.45;color:rgba(241,237,227,.8);max-width:36ch}
+  .ov.bl{left:var(--gut);bottom:12vh;max-width:min(620px,86vw)} .ov.tl{left:var(--gut);top:14vh;max-width:min(620px,86vw)}
+  .ov.br{right:var(--gut);bottom:12vh;max-width:min(560px,86vw);text-align:right} .ov.tr{right:var(--gut);top:14vh;max-width:min(560px,86vw);text-align:right}
+  .ov .time{margin-top:14px;display:inline-flex;gap:14px;align-items:baseline;font-family:var(--m)}
+  .ov .time b{font-size:clamp(22px,2.6vw,40px);font-weight:600;letter-spacing:-.02em} .ov .time span{font-size:10px;letter-spacing:.18em;color:var(--mute);text-transform:uppercase}
+  /* hero overlay */
+  #hero{left:0;right:0;top:0;bottom:0}
+  #hero .name{position:absolute;left:var(--gut);top:16vh;font-size:clamp(44px,7vw,110px)}
+  #hero .name .c{display:inline-block}
+  #hero .sub{position:absolute;left:var(--gut);bottom:30vh;font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;line-height:1.8;color:rgba(241,237,227,.8)}
+  #hero .sub b{color:var(--yellow);font-weight:600}
+  #hero .card{position:absolute;left:var(--gut);bottom:12vh;width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:rgba(11,11,12,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);font-size:12px}
+  #hero .card .k{font-family:var(--m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)} #hero .card .v{margin-top:6px;font-weight:800;font-size:17px} #hero .card .d{margin-top:4px;color:var(--mute)}
+  #hero .card .cd{margin-top:8px;font-family:var(--m);font-size:20px;color:var(--yellow)} #hero .card .cd small{font-size:10px;color:var(--mute);letter-spacing:.14em;margin-left:6px}
+  #hero .hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-family:var(--m);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
+  @media (max-width:820px){#hero .name{font-size:clamp(40px,12vw,64px);top:12vh}#hero .sub{bottom:34vh}#hero .card{bottom:14vh}.ov h2{font-size:clamp(30px,9vw,44px)}.ov p{font-size:14px}}
+
+  /* sections */
+  section.s{position:relative;padding:14vh var(--gut)}
+  .wrap{max-width:1500px;margin:0 auto}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:6vh}
+  .head h2{font-size:clamp(40px,6vw,96px);margin-top:10px}
+  .head p{max-width:40ch;color:var(--mute);font-size:clamp(15px,1.2vw,18px);line-height:1.5}
+  /* results */
+  .cal{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+  .ev{padding:20px 18px;border:1px solid var(--line);border-radius:4px;background:var(--bg2);min-height:190px;display:flex;flex-direction:column;justify-content:space-between}
+  .ev .n{font-family:var(--m);font-size:10px;letter-spacing:.16em;color:var(--mute)} .ev h3{margin-top:10px;font-weight:900;font-variation-settings:"wdth" 110;text-transform:uppercase;letter-spacing:-.02em;font-size:clamp(18px,1.6vw,24px);line-height:1}
+  .ev .d{margin-top:6px;font-size:12px;color:var(--mute)} .ev .r{margin-top:18px;font-family:var(--m);font-size:30px;font-weight:600} .ev.p2 .r{color:var(--yellow)} .ev.next{border-color:var(--red)} .ev.next .r{color:var(--red);font-size:16px} .ev.off{opacity:.4} .ev.off h3{text-decoration:line-through var(--red)}
+  .pal{margin-top:6vh;display:grid;grid-template-columns:1fr 2fr;gap:30px;border-top:1px solid var(--line);padding-top:26px}
+  .pal ul{list-style:none} .pal li{display:grid;grid-template-columns:60px 1fr auto;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);font-size:14px} .pal li .y{font-family:var(--m);color:var(--mute);font-size:12px} .pal li .p{font-family:var(--m);color:var(--yellow);font-size:13px}
+  @media (max-width:1000px){.cal{grid-template-columns:repeat(2,1fr)}.pal{grid-template-columns:1fr}} @media (max-width:560px){.cal{grid-template-columns:1fr}}
+  /* crew */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .who{position:relative;aspect-ratio:4/5;overflow:hidden;border-radius:4px;background:#000} .who img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+  .who .cap{position:absolute;left:0;right:0;bottom:0;padding:18px;background:linear-gradient(transparent,rgba(0,0,0,.8))} .who b{display:block;font-size:clamp(22px,2.4vw,36px);font-weight:900;font-variation-settings:"wdth" 112;text-transform:uppercase;letter-spacing:-.02em} .who span{display:block;margin-top:6px;font-family:var(--m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--yellow)}
+  @media (max-width:820px){.two{grid-template-columns:1fr}}
+  /* strip (pinned horizontal) */
+  #strip{padding:0;background:var(--bg2)} #strip .pin{height:100vh;display:flex;align-items:center;overflow:hidden}
+  #strip .track{display:flex;gap:12px;padding:0 var(--gut);width:max-content;will-change:transform}
+  #strip .lead{flex:none;width:30vw;min-width:240px} #strip .lead h2{font-size:clamp(36px,5.5vw,84px);margin-top:10px}
+  #strip figure{flex:none;height:64vh;overflow:hidden;border-radius:4px;background:#000;position:relative} #strip img{height:100%;width:auto} #strip figcaption{position:absolute;left:12px;bottom:10px;font-family:var(--m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);padding:5px 8px;border-radius:3px}
+  #strip figure.t{height:76vh} #strip figure.s{height:48vh}
+  /* partners */
+  .pt{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
+  .pt a{border:1px solid var(--line);border-radius:4px;padding:36px;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;background:var(--bg2)}
+  .pt img{max-height:130px;width:auto;max-width:75%} .pt .k{font-family:var(--m);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute)} .pt .t{margin-top:8px;font-weight:800;font-size:17px}
+  .row{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px} .row span{font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:10px 14px;border:1px solid var(--line);border-radius:999px}
+  @media (max-width:820px){.pt{grid-template-columns:1fr}}
+  /* footer */
+  footer{position:relative;overflow:hidden;background:#000} footer .bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.45} footer .bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg),rgba(11,11,12,.2) 50%,rgba(11,11,12,.85))}
+  footer .in{position:relative;padding:22vh var(--gut) 34px;min-height:90vh;display:flex;flex-direction:column;justify-content:flex-end}
+  footer h2{font-size:clamp(48px,10vw,170px);line-height:.85}
+  footer .soc{margin-top:34px;display:flex;flex-wrap:wrap;gap:8px} footer .soc a{padding:11px 15px;border:1px solid rgba(241,237,227,.3);border-radius:999px;font-family:var(--m);font-size:11px;letter-spacing:.14em;text-transform:uppercase} footer .soc a:hover{background:var(--fg);color:#000}
+  footer .bar{margin-top:50px;padding-top:18px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-family:var(--m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute)}
+  .rev{opacity:0;transform:translateY(24px)}
+</style>
+</head>
+<body>
+<div id="loader"><div class="lg">Mihai <span>Manole</span></div><div class="bar"><i id="ldbar"></i></div><div class="mono" id="ldnum">0%</div></div>
+
+<header id="hdr">
+  <a class="wm" href="#film">Mihai <b>Manole</b></a>
+  <div class="ro mono"><span id="ro">Start</span><div class="bar"><i id="robar"></i></div></div>
+  <div class="right"><a class="next" href="#rezultate" id="nextpill">Următoarea cursă</a></div>
+</header>
+
+<section id="film">
+  <div class="stage" id="stage">
+    <canvas id="cv"></canvas>
+    <div class="bars"><i></i><i></i></div>
+    <div class="grain"></div><div class="vig"></div><div class="flash" id="flash"></div>
+
+    <div class="ov" id="hero" data-scene="0">
+      <h1 class="name big" id="name">MIHAI<br>MANOLE</h1>
+      <div class="sub">Pilot de raliu · Campionatul Național<br>Škoda Fabia Rally2 Evo · <b>#69</b><br>Copilot: Florin Dorca</div>
+      <div class="card" id="nextcard"><div class="k">Următoarea cursă</div><div class="v" id="nc-name">—</div><div class="d" id="nc-date">—</div><div class="cd"><span id="nc-days">—</span><small>zile</small></div></div>
+      <div class="hint">Derulează</div>
+    </div>
+    <div class="ov bl" data-scene="1"><div class="tag">Înainte de start</div><h2 class="big">Casca <em>sus</em>.</h2><p>Totul e deja în cap: fiecare curbă, fiecare notă.</p></div>
+    <div class="ov br" data-scene="2"><div class="tag">La volan</div><h2 class="big">Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută.</p></div>
+    <div class="ov tl" data-scene="3"><div class="tag">PS1 · Raliul Maramureșului · pietriș</div><h2 class="big">Pietrișul nu <em>iartă</em>.</h2><div class="time"><b>P2</b><span>general · 2026</span></div></div>
+    <div class="ov bl" data-scene="4"><div class="tag">PS2 · munte · asfalt ud</div><h2 class="big">Ploaia schimbă <em>tot</em>.</h2><div class="time"><b>#69</b><span>Fabia Rally2 Evo</span></div></div>
+    <div class="ov tr" data-scene="5"><div class="tag">Podium</div><h2 class="big">Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026.</p></div>
+  </div>
+</section>
+
+<section class="s" id="rezultate">
+  <div class="wrap">
+    <div class="head"><div><div class="mono">Campionatul Național de Raliuri</div><h2 class="big">Sezonul <em>2026</em></h2></div><p>Opt etape în calendar. Rezultatele se completează după fiecare probă.</p></div>
+    <div class="cal" id="cal"></div>
+    <div class="pal"><h3 class="big" style="font-size:clamp(26px,3vw,40px)">Palmares</h3><ul>
+      <li><span class="y">2026</span><span>Raliul Maramureșului</span><span class="p">Locul 2 general</span></li>
+      <li><span class="y">2025</span><span>TESS Rally Brașov &amp; Tg. Secuiesc</span><span class="p">Locul 3 general</span></li>
+      <li><span class="y">2025</span><span>Două podiumuri absolute în sezon</span><span class="p">P3 · P3</span></li>
+      <li><span class="y">2025</span><span>Raliul Clujului</span><span class="p">Locul 8 general</span></li>
+    </ul></div>
+  </div>
+</section>
+
+<section class="s" id="echipaj">
+  <div class="wrap">
+    <div class="head"><div><div class="mono">Echipajul</div><h2 class="big">Doi în <em>mașină</em>.</h2></div><p>Pilotul conduce, copilotul citește. Al șaselea sezon împreună pe Fabia Rally2 Evo.</p></div>
+    <div class="two">
+      <div class="who rev"><img decoding="async" src="assets/img/mihai-door.jpg" alt="Mihai Manole"><div class="cap"><b>Mihai Manole</b><span>Pilot · #69</span></div></div>
+      <div class="who rev"><img decoding="async" src="assets/img/florin.jpg" alt="Florin Dorca"><div class="cap"><b>Florin Dorca</b><span>Copilot · caietul de note</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="strip">
+  <div class="pin"><div class="track" id="track">
+    <div class="lead"><div class="mono">Sezonul, în imagini</div><h2 class="big">Pe <em>probe</em>.</h2></div>
+    <figure class="t"><img decoding="async" src="assets/img/act-jump.jpg" alt=""><figcaption>Pădure · săritură</figcaption></figure>
+    <figure><img decoding="async" src="assets/img/act-hairpin.jpg" alt=""><figcaption>Ac de păr</figcaption></figure>
+    <figure class="s"><img decoding="async" src="assets/img/act-rear-dust.jpg" alt=""><figcaption>Pietriș</figcaption></figure>
+    <figure class="t"><img decoding="async" src="assets/img/act-night.jpg" alt=""><figcaption>Start festiv</figcaption></figure>
+    <figure><img decoding="async" src="assets/img/car-side.jpg" alt=""><figcaption>Fabia Rally2 Evo</figcaption></figure>
+    <figure class="s"><img decoding="async" src="assets/img/team-wheel.jpg" alt=""><figcaption>Service</figcaption></figure>
+    <figure class="t"><img decoding="async" src="assets/img/act-crowd.jpg" alt=""><figcaption>Sosire</figcaption></figure>
+    <figure><img decoding="async" src="assets/img/crew-service.jpg" alt=""><figcaption>Echipajul</figcaption></figure>
+    <figure class="s"><img decoding="async" src="assets/img/act-pan.jpg" alt=""><figcaption>Shakedown</figcaption></figure>
+    <figure class="t"><img decoding="async" src="assets/img/car-rear.jpg" alt=""><figcaption>#69</figcaption></figure>
+  </div></div>
+</section>
+
+<section class="s" id="parteneri">
+  <div class="wrap">
+    <div class="head"><div><div class="mono">Parteneri</div><h2 class="big">Cei care <em>împing</em>.</h2></div></div>
+    <div class="pt">
+      <a href="#" class="rev"><img src="assets/logo/budureasca.svg" alt="Budureasca"><div><div class="k">Partener principal</div><div class="t">Budureasca</div></div></a>
+      <a href="#" class="rev"><img src="assets/logo/ictl.svg" alt="ICTL Corp" style="filter:invert(1) brightness(1.4)"><div><div class="k">Partener tehnologic</div><div class="t">ICTL Corp</div></div></a>
+    </div>
+    <div class="row rev"><span>NEXT Energy</span><span>Pirelli</span><span>OMP</span><span>Stilo</span><span>Alpha Racing</span></div>
+  </div>
+</section>
+
+<footer id="fin">
+  <div class="bg"><img decoding="async" src="assets/img/car-rear.jpg" alt=""></div>
+  <div class="in">
+    <div class="mono">Ne vedem la start</div>
+    <h2 class="big">Următoarea<br><em>probă</em>.</h2>
+    <div class="soc"><a href="https://x.com/MihayManole" target="_blank" rel="noopener">X / Twitter</a><a href="#">Instagram</a><a href="#">Facebook</a><a href="mailto:contact@mihaimanole.ro">Contact</a></div>
+    <div class="bar"><span>Mihai Manole · Pilot de raliu · #69</span><span>Foto: Flavius Croitoriu, MHN, ASZ</span><span>© <span id="yr"></span></span></div>
+  </div>
+</footer>
+
+<script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script>
+<script>
+(() => {
+  gsap.registerPlugin(ScrollTrigger);
+  const Q = new URLSearchParams(location.search), JUMP = Q.get('jump');
+  if (JUMP !== null) history.scrollRestoration = 'manual';
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* calendar */
+  const CAL = [
+    {n:'01',name:'Raliul Maramureșului',d:'27–29 mar',end:'2026-03-29',res:'P2',cls:'p2'},{n:'02',name:'Raliul Harghitei',d:'24–26 apr',end:'2026-04-26',res:'—'},
+    {n:'03',name:'Raliul Argeșului',d:'15–17 mai',end:'2026-05-17',res:'—'},{n:'04',name:'Raliul Clujului',d:'19–21 iun',end:'2026-06-21',res:'—'},
+    {n:'05',name:'Raliul Sibiului',d:'10–12 iul',end:'2026-07-12',res:'—'},{n:'06',name:'Raliul Iașului',d:'4–6 sep',end:'2026-09-06',res:'—'},
+    {n:'07',name:'Raliul Vâlcii',d:'24–26 sep',end:'2026-09-26',start:'2026-09-24',res:'—'},{n:'08',name:'Raliul Moldovei',d:'16–18 oct',end:'2026-10-18',res:'anulat',off:true}];
+  const today = new Date(); today.setHours(0,0,0,0); const next = CAL.find(e => !e.off && new Date(e.end) >= today);
+  document.getElementById('cal').innerHTML = CAL.map(e => `<div class="ev ${e.cls||''} ${e===next?'next':''} ${e.off?'off':''}"><div><div class="n">Etapa ${e.n}</div><h3>${e.name}</h3><div class="d">${e.d} 2026</div></div><div class="r">${e===next?'Următoarea':e.res}</div></div>`).join('');
+  if (next){ document.getElementById('nc-name').textContent = next.name; document.getElementById('nc-date').textContent = next.d + ' 2026 · CNR';
+    document.getElementById('nc-days').textContent = Math.max(0, Math.round((new Date(next.start||next.end) - today)/86400000)); document.getElementById('nextpill').textContent = 'Următoarea · ' + next.name.replace('Raliul ',''); }
+
+  /* ====== FILM: 6 scenes, hard cuts, camera moves, helmet frames ====== */
+  const cv = document.getElementById('cv'), ctx = cv.getContext('2d', {alpha:false}), film = document.getElementById('film'), flash = document.getElementById('flash');
+  const ro = document.getElementById('ro'), robar = document.getElementById('robar'), hdr = document.getElementById('hdr');
+  const DPR = Math.min(devicePixelRatio||1, 1.5);
+  const HF = 61; const hb = new Map(), hblobs = [], decoding = new Set();
+  const IM = {}; const SRC = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', wet:'assets/img/s-wet.jpg', podium:'assets/img/s-podium.jpg' };
+  // scenes: [start, end, name, focus(x,y) for portrait screens, camera: [z0,z1,px0,px1,py0,py1]]
+  const SC = [
+    { a:0,    b:.17, key:'portrait', foc:[.72,.40], cam:[1.00,1.05, 0,0, 0,0], label:'Start' },
+    { a:.17,  b:.36, key:'helmet',   foc:[.72,.40], cam:[1.05,1.05, 0,0, 0,0], label:'Casca', seq:true },
+    { a:.36,  b:.52, key:'cockpit',  foc:[.42,.45], cam:[1.00,1.12, 0,-.03, 0,0], label:'La volan' },
+    { a:.52,  b:.68, key:'dust',     foc:[.55,.55], cam:[1.14,1.00, .04,-.03, 0,0], label:'PS1 · pietriș' },
+    { a:.68,  b:.84, key:'wet',      foc:[.55,.55], cam:[1.00,1.12, -.02,.03, 0,0], label:'PS2 · asfalt ud' },
+    { a:.84,  b:1.0, key:'podium',   foc:[.55,.45], cam:[1.10,1.00, 0,0, .02,0], label:'Podium' } ];
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t, easeOut=t=>1-Math.pow(1-t,3);
+  let progress=0, lastP=-1;
+  function resize(){ cv.width=Math.round(innerWidth*DPR); cv.height=Math.round(innerHeight*DPR); cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px'; lastP=-1; render(); }
+  addEventListener('resize', resize);
+  const portraitScreen = () => innerWidth < innerHeight;
+  function draw(b, foc, z, px, py){ const cw=cv.width, ch=cv.height, s=Math.max(cw/b.width, ch/b.height)*z, w=b.width*s, h=b.height*s;
+    const fx = portraitScreen() ? foc[0] : lerp(.5, foc[0], .3), fy = portraitScreen() ? foc[1] : lerp(.5, foc[1], .4);
+    ctx.drawImage(b, (cw-w)*fx + px*cw, (ch-h)*fy + py*ch, w, h); }
+  // helmet sequence: speed map compresses the noisy middle (frames 20..47)
+  const W = []; for (let i=0;i<HF;i++) W.push(i>=20 && i<=47 ? .2 : 1); const CUM=[]; let acc=0; for (const w of W){ acc+=w; CUM.push(acc); } for (let i=0;i<HF;i++) CUM[i]/=acc;
+  function hFrame(t){ let lo=0, hi=HF-1; while (lo<hi){ const m=(lo+hi)>>1; if (CUM[m] < t) lo=m+1; else hi=m; } return lo; }
+  function ensureH(c){ for (let i=Math.max(0,c-6); i<=Math.min(HF-1,c+6); i++){ if (hb.has(i)||decoding.has(i)||!hblobs[i]||decoding.size>4) continue; decoding.add(i); createImageBitmap(hblobs[i]).then(b=>{ decoding.delete(i); hb.set(i,b); lastP=-1; render(); }).catch(()=>decoding.delete(i)); }
+    for (const k of Array.from(hb.keys())) if (k<c-10||k>c+10){ hb.get(k).close(); hb.delete(k); } }
+  function nearestH(i){ for (let d=1; d<HF; d++){ if (hb.has(i-d)) return hb.get(i-d); if (hb.has(i+d)) return hb.get(i+d); } return null; }
+  let cutFlash = 0, lastScene = -1;
+  function render(){
+    if (!IM.portrait) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,cv.width,cv.height);
+    let si = SC.findIndex(s => progress >= s.a && progress < s.b); if (si < 0) si = SC.length-1; const s = SC[si]; const t = clamp((progress - s.a)/(s.b - s.a), 0, 1);
+    // punch-in on cuts: first 6% of a scene settles from +6% zoom
+    const punch = si>0 ? (1 - easeOut(clamp(t/.06,0,1)))*.06 : 0;
+    const z = lerp(s.cam[0], s.cam[1], t) + punch, px = lerp(s.cam[2], s.cam[3], t), py = lerp(s.cam[4], s.cam[5], t);
+    if (s.seq){ const f = hFrame(t); ensureH(f); const b = hb.get(f) || nearestH(f) || IM.portrait; draw(b, s.foc, z, px, py); }
+    else draw(IM[s.key], s.foc, z, px, py);
+    if (si !== lastScene){ if (lastScene >= 0 && JUMP === null){ flash.style.opacity = .55; setTimeout(()=>flash.style.opacity=0, 40); } lastScene = si; }
+    // overlays
+    document.querySelectorAll('.ov').forEach(el => { const k = +el.dataset.scene; let a = 0;
+      if (k === si){ a = k===0 ? clamp(1 - t/.7, 0, 1) : (k===SC.length-1 ? clamp((t-.08)/.25,0,1) : clamp(Math.min((t-.10)/.18, (.92-t)/.18), 0, 1)); }
+      el.style.opacity = a; if (k) el.style.transform = `translateY(${(1-a)*18}px)`; });
+    if (ro.textContent !== s.label) ro.textContent = s.label; robar.style.width = (progress*100).toFixed(1)+'%';
+  }
+  function tick(){ try{ const r = film.getBoundingClientRect(); progress = clamp(-r.top/(r.height-innerHeight), 0, 1); if (progress !== lastP){ lastP = progress; render(); } }catch(e){ console.warn(e); } requestAnimationFrame(tick); }
+
+  /* build sections */
+  function build(){
+    const track = document.getElementById('track'); const dist = () => track.scrollWidth - innerWidth;
+    gsap.to(track, { x: () => -dist(), ease:'none', scrollTrigger:{ trigger:'#strip', start:'top top', end:() => '+='+dist(), pin:'#strip .pin', scrub:true, invalidateOnRefresh:true, anticipatePin:1 } });
+    document.querySelectorAll('.rev').forEach(el => gsap.to(el, { opacity:1, y:0, duration:1, ease:'power3.out', scrollTrigger:{ trigger:el, start:'top 88%', once:true } }));
+    ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom bottom', onToggle: st => { if (!st.isActive) ro.textContent = ''; } });
+  }
+  function intro(){ const name = document.getElementById('name'); const html = name.innerHTML.split('<br>').map(w => Array.from(w.normalize('NFC')).map(c => `<span class="c">${c}</span>`).join('')).join('<br>'); name.innerHTML = html;
+    const tl = gsap.timeline(); tl.from('#name .c', { yPercent:110, opacity:0, duration:1, ease:'power4.out', stagger:.04 }, 0).from('#hero .sub, #hero .card, #hero .hint', { y:20, opacity:0, duration:.8, ease:'power3.out', stagger:.08 }, .5).from('#hdr', { y:-16, opacity:0, duration:.7 }, .5);
+    if (document.hidden) tl.progress(1); return tl; }
+
+  /* load */
+  const ldbar = document.getElementById('ldbar'), ldnum = document.getElementById('ldnum'); let done = 0; const total = Object.keys(SRC).length + HF;
+  const prog = () => { done++; const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = p+'%'; };
+  (async () => {
+    await Promise.all(Object.entries(SRC).map(([k,src]) => fetch(src).then(r=>r.blob()).then(b=>createImageBitmap(b)).then(b=>{ IM[k]=b; prog(); })));
+    let n = 0; const worker = async () => { while (n < HF){ const i = n++; try{ hblobs[i] = await fetch(`frames/h_${String(i+1).padStart(3,'0')}.jpg`).then(r=>r.blob()); }catch(e){} prog(); } };
+    await Promise.all(Array.from({length:8}, worker)); ensureH(0);
+    if (document.fonts) await document.fonts.ready;
+    resize(); build(); requestAnimationFrame(tick);
+    setTimeout(() => document.querySelectorAll('#strip img, .who img, footer img').forEach(im => { const w = new Image(); w.decoding='async'; w.src = im.currentSrc || im.src; w.decode && w.decode().catch(()=>{}); }), 800);
+    if (JUMP !== null) document.getElementById('loader').style.transition='none'; document.getElementById('loader').classList.add('hide');
+    if (JUMP !== null){ document.getElementById('hero').style.opacity = 1; requestAnimationFrame(() => { scrollTo(0, +JUMP||0); ScrollTrigger.refresh(); ScrollTrigger.update(); ScrollTrigger.getAll().forEach(st => { if (st.animation && st.scrub) st.animation.progress(st.progress); }); setTimeout(() => { lastP=-1; render(); window.__ready = true; }, 500); }); }
+    else { const tl = intro(); ScrollTrigger.refresh(); tl.eventCallback('onComplete', () => { window.__ready = true; }); }
+  })().catch(e => { console.error(e); document.getElementById('loader').classList.add('hide'); window.__ready = true; });
+})();
+</script>
+</body>
+</html>
