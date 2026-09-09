@@ -55,6 +55,7 @@
   #film{position:relative;height:860vh;background:var(--carbon)}
   #film .stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--carbon)}
   #film canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #film .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
   #film .grain{position:absolute;inset:0;pointer-events:none;opacity:.10;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:180px 180px}
   #film .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
   #film .fade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(17,17,17,0) 40%,var(--seam) 100%);opacity:0}
@@ -301,6 +302,7 @@
 <section id="film">
   <div class="stage" id="stage">
     <canvas id="cv"></canvas>
+    <img class="still" id="still" src="assets/anchors/portrait.jpg" alt="Mihai Manole" decoding="async" fetchpriority="high">
     <div class="grain" id="grain"></div>
     <div class="vig" id="vig"></div>
 
@@ -575,7 +577,7 @@
      ================================================================= */
   const film = document.getElementById('film'), stage = document.getElementById('stage'), cv = document.getElementById('cv'), ctx = cv.getContext('2d', { alpha:false });
   const hdr = document.getElementById('hdr'), ro = document.getElementById('ro'), robar = document.getElementById('robar'), odo = document.getElementById('odo');
-  const fade = document.getElementById('fade'), grain = document.getElementById('grain'), vig = document.getElementById('vig');
+  const still = document.getElementById('still'), fade = document.getElementById('fade'), grain = document.getElementById('grain'), vig = document.getElementById('vig');
   const DPR = Math.min(devicePixelRatio || 1, 1.5);
   let FRAME_COUNT = 0, FRAME_W = 1280, FRAME_H = 720, SEAM = '#1b3144';
   const blobs = [], bitmaps = new Map(), decoding = new Set();
@@ -626,6 +628,7 @@
       let ch = CHAPTERS[0]; for (const c of CHAPTERS) if (progress >= c[0]) ch = c; if (ro.textContent !== ch[1]) ro.textContent = ch[1];
       robar.style.width = (progress*100).toFixed(1) + '%'; odo.textContent = (progress*KM).toFixed(2);
       // seam handoff
+      still.style.opacity = Math.max(0, 1 - progress/0.035);
       const f = Math.max(0, Math.min(1, (progress - .92)/.08)); fade.style.opacity = f; grain.style.opacity = .10*(1-f); vig.style.opacity = 1-f;
     }catch(e){ console.warn(e); }
     requestAnimationFrame(tick);

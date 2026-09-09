@@ -73,3 +73,8 @@
 - Draft 480p: 6 clipuri × 7.5 = 45 cr (unul fără end-frame, aruncat). Master 720p: 5 × 22.5 ≈ 112 cr, doar cu aprobare.
 - Pagină: motor canvas cu ImageBitmap (engine.md), 301 cadre 1280w, beat-uri ca note de traseu, header adaptiv, seam spre carbon, secțiunile v1 sub film.
 - Scripturi: build/film2/run-chain.sh (lanțul cu END), build/chain-ref.sh (suportă END= și refs).
+
+## Film v3.1 (2026-09-09) — ancore WRC editate cu Nano Banana Pro
+- Ancore în build/anchors/final/ (portret service park apus, cockpit, pietriș, săritură, ac de păr, podium). Editate din pozele reale; „Budureasca” corectat cu logo-ul ca referință; ICTL Corp adăugat pe aripa spate + aripa față.
+- Lanț în build/film3/ (run-chain.sh). Toate 5 capitole OK. Credite: ancore 12 + corecții 14 + clipuri 37.5 + 1 job test aruncat 7.5.
+- Site-v3: hero afișează assets/anchors/portrait.jpg la rezoluție întreagă, se topește în film pe primele 3.5% de scroll.
