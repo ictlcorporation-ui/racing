@@ -102,3 +102,8 @@
 - Lanț build/film5/run-kling.sh (start = ultimul cadru anterior, end = ancora reală). 6 × 30 = 180 cr + bake-off 105.
 - Master 4K build/film5/master.mp4 (721 cadre) → site-v3/frames 361 cadre la 1440 px (54 MB); loader pornește după 30 de cadre.
 - ch6: Kling a făcut o tăietură de montaj hairpin→podium (nu coborâre continuă). De regenerat doar dacă cere clientul.
+
+## Film v6.1 (2026-09-09) — ancore v9 + Kling 4K ch1–ch4 regenerate
+- Ancore: cort negru cu Budureasca (fără WRC), mașina pe roți (fără cric/roți sub ea), NEXT ENERGY furnizare (text, fără hexagon), incar cu 2 roți vizibile + nume pe geam scrise cu PIL, ecuson „Mihai Manole” copiat deterministic.
+- Kling 4K: ch1 regenerat o dată (etichetă albă inventată pe piept) cu interdicție explicită pentru etichete noi. ch5/ch6 din film5. Seam ch1→ch2 0.96.
+- Credite: ancore ~14 + 5 clipuri × 30 = 150.
