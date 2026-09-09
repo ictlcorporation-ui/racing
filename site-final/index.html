@@ -69,6 +69,13 @@
   #hero .hint{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);font-family:var(--m);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mute)}
   @media (max-width:820px){#hero .name{font-size:clamp(40px,12vw,64px);top:12vh}#hero .sub{bottom:34vh}#hero .card{bottom:14vh}.ov h2{font-size:clamp(30px,9vw,44px)}.ov p{font-size:14px}}
 
+  /* speed band */
+  #band{position:relative;height:56vh;min-height:360px;background:var(--red);overflow:hidden}
+  #band .in{position:absolute;inset:0}
+  #band .ghost{position:absolute;left:0;top:50%;transform:translateY(-50%);white-space:nowrap;font-size:clamp(90px,16vw,260px);color:rgba(0,0,0,.18);will-change:transform}
+  #band .car{position:absolute;left:0;bottom:8%;height:62%;width:auto;will-change:transform;filter:drop-shadow(0 30px 30px rgba(0,0,0,.35))}
+  #band .dust{position:absolute;left:0;bottom:6%;height:30%;width:40vw;background:radial-gradient(ellipse at 100% 100%,rgba(255,255,255,.35),rgba(255,255,255,0) 70%);opacity:0;will-change:transform,opacity}
+  .head h2{clip-path:inset(0 0 100% 0)}
   /* sections */
   section.s{position:relative;padding:14vh var(--gut)}
   .wrap{max-width:1500px;margin:0 auto}
@@ -92,7 +99,7 @@
   #strip{padding:0;background:var(--bg2)} #strip .pin{height:100vh;display:flex;align-items:center;overflow:hidden}
   #strip .track{display:flex;gap:12px;padding:0 var(--gut);width:max-content;will-change:transform}
   #strip .lead{flex:none;width:30vw;min-width:240px} #strip .lead h2{font-size:clamp(36px,5.5vw,84px);margin-top:10px}
-  #strip figure{flex:none;height:64vh;overflow:hidden;border-radius:4px;background:#000;position:relative} #strip img{height:100%;width:auto} #strip figcaption{position:absolute;left:12px;bottom:10px;font-family:var(--m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);padding:5px 8px;border-radius:3px}
+  #strip figure{flex:none;height:64vh;overflow:hidden;border-radius:4px;background:#000;position:relative} #strip img{height:100%;width:auto;transform:scale(1.14);transform-origin:left center;will-change:transform} #strip figcaption{position:absolute;left:12px;bottom:10px;font-family:var(--m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;background:rgba(0,0,0,.55);padding:5px 8px;border-radius:3px}
   #strip figure.t{height:76vh} #strip figure.s{height:48vh}
   /* partners */
   .pt{display:grid;grid-template-columns:1.2fr 1fr;gap:12px}
@@ -134,7 +141,7 @@
     <div class="ov br" data-scene="2"><div class="tag">La volan</div><h2 class="big">Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută.</p></div>
     <div class="ov tl" data-scene="3"><div class="tag">PS1 · Raliul Maramureșului · pietriș</div><h2 class="big">Pietrișul nu <em>iartă</em>.</h2><div class="time"><b>P2</b><span>general · 2026</span></div></div>
     <div class="ov bl" data-scene="4"><div class="tag">PS2 · munte · asfalt ud</div><h2 class="big">Ploaia schimbă <em>tot</em>.</h2><div class="time"><b>#69</b><span>Fabia Rally2 Evo</span></div></div>
-    <div class="ov tr" data-scene="5"><div class="tag">Podium</div><h2 class="big">Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026.</p></div>
+    <div class="ov bl" data-scene="5"><div class="tag">Podium</div><h2 class="big">Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026.</p></div>
   </div>
 </section>
 
@@ -148,6 +155,14 @@
       <li><span class="y">2025</span><span>Două podiumuri absolute în sezon</span><span class="p">P3 · P3</span></li>
       <li><span class="y">2025</span><span>Raliul Clujului</span><span class="p">Locul 8 general</span></li>
     </ul></div>
+  </div>
+</section>
+
+<section id="band">
+  <div class="in">
+    <div class="ghost big">AL ȘASELEA SEZON · FABIA RALLY2 EVO · #69 · AL ȘASELEA SEZON · FABIA RALLY2 EVO · #69</div>
+    <img class="car" id="bandcar" src="assets/img/car-cutout.webp" alt="Škoda Fabia Rally2 Evo #69" decoding="async">
+    <div class="dust" id="banddust"></div>
   </div>
 </section>
 
@@ -198,7 +213,7 @@
   </div>
 </footer>
 
-<script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script>
+<script src="vendor/gsap.min.js"></script><script src="vendor/ScrollTrigger.min.js"></script><script src="film.js"></script>
 <script>
 (() => {
   gsap.registerPlugin(ScrollTrigger);
@@ -217,56 +232,18 @@
   if (next){ document.getElementById('nc-name').textContent = next.name; document.getElementById('nc-date').textContent = next.d + ' 2026 · CNR';
     document.getElementById('nc-days').textContent = Math.max(0, Math.round((new Date(next.start||next.end) - today)/86400000)); document.getElementById('nextpill').textContent = 'Următoarea · ' + next.name.replace('Raliul ',''); }
 
-  /* ====== FILM: 6 scenes, hard cuts, camera moves, helmet frames ====== */
-  const cv = document.getElementById('cv'), ctx = cv.getContext('2d', {alpha:false}), film = document.getElementById('film'), flash = document.getElementById('flash');
-  const ro = document.getElementById('ro'), robar = document.getElementById('robar'), hdr = document.getElementById('hdr');
-  const DPR = Math.min(devicePixelRatio||1, 1.5);
-  const HF = 61; const hb = new Map(), hblobs = [], decoding = new Set();
-  const IM = {}; const SRC = { portrait:'assets/img/s-portrait.jpg', helmet:'assets/img/s-helmet.jpg', cockpit:'assets/img/s-cockpit.jpg', dust:'assets/img/s-dust.jpg', wet:'assets/img/s-wet.jpg', podium:'assets/img/s-podium.jpg' };
-  // scenes: [start, end, name, focus(x,y) for portrait screens, camera: [z0,z1,px0,px1,py0,py1]]
-  const SC = [
-    { a:0,    b:.17, key:'portrait', foc:[.72,.40], cam:[1.00,1.05, 0,0, 0,0], label:'Start' },
-    { a:.17,  b:.36, key:'helmet',   foc:[.72,.40], cam:[1.05,1.05, 0,0, 0,0], label:'Casca', seq:true },
-    { a:.36,  b:.52, key:'cockpit',  foc:[.42,.45], cam:[1.00,1.12, 0,-.03, 0,0], label:'La volan' },
-    { a:.52,  b:.68, key:'dust',     foc:[.55,.55], cam:[1.14,1.00, .04,-.03, 0,0], label:'PS1 · pietriș' },
-    { a:.68,  b:.84, key:'wet',      foc:[.55,.55], cam:[1.00,1.12, -.02,.03, 0,0], label:'PS2 · asfalt ud' },
-    { a:.84,  b:1.0, key:'podium',   foc:[.55,.45], cam:[1.10,1.00, 0,0, .02,0], label:'Podium' } ];
-  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), lerp=(a,b,t)=>a+(b-a)*t, easeOut=t=>1-Math.pow(1-t,3);
-  let progress=0, lastP=-1;
-  function resize(){ cv.width=Math.round(innerWidth*DPR); cv.height=Math.round(innerHeight*DPR); cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px'; lastP=-1; render(); }
-  addEventListener('resize', resize);
-  const portraitScreen = () => innerWidth < innerHeight;
-  function draw(b, foc, z, px, py){ const cw=cv.width, ch=cv.height, s=Math.max(cw/b.width, ch/b.height)*z, w=b.width*s, h=b.height*s;
-    const fx = portraitScreen() ? foc[0] : lerp(.5, foc[0], .3), fy = portraitScreen() ? foc[1] : lerp(.5, foc[1], .4);
-    ctx.drawImage(b, (cw-w)*fx + px*cw, (ch-h)*fy + py*ch, w, h); }
-  // helmet sequence: speed map compresses the noisy middle (frames 20..47)
-  const W = []; for (let i=0;i<HF;i++) W.push(i>=20 && i<=47 ? .2 : 1); const CUM=[]; let acc=0; for (const w of W){ acc+=w; CUM.push(acc); } for (let i=0;i<HF;i++) CUM[i]/=acc;
-  function hFrame(t){ let lo=0, hi=HF-1; while (lo<hi){ const m=(lo+hi)>>1; if (CUM[m] < t) lo=m+1; else hi=m; } return lo; }
-  function ensureH(c){ for (let i=Math.max(0,c-6); i<=Math.min(HF-1,c+6); i++){ if (hb.has(i)||decoding.has(i)||!hblobs[i]||decoding.size>4) continue; decoding.add(i); createImageBitmap(hblobs[i]).then(b=>{ decoding.delete(i); hb.set(i,b); lastP=-1; render(); }).catch(()=>decoding.delete(i)); }
-    for (const k of Array.from(hb.keys())) if (k<c-10||k>c+10){ hb.get(k).close(); hb.delete(k); } }
-  function nearestH(i){ for (let d=1; d<HF; d++){ if (hb.has(i-d)) return hb.get(i-d); if (hb.has(i+d)) return hb.get(i+d); } return null; }
-  let cutFlash = 0, lastScene = -1;
-  function render(){
-    if (!IM.portrait) return; ctx.fillStyle='#000'; ctx.fillRect(0,0,cv.width,cv.height);
-    let si = SC.findIndex(s => progress >= s.a && progress < s.b); if (si < 0) si = SC.length-1; const s = SC[si]; const t = clamp((progress - s.a)/(s.b - s.a), 0, 1);
-    // punch-in on cuts: first 6% of a scene settles from +6% zoom
-    const punch = si>0 ? (1 - easeOut(clamp(t/.06,0,1)))*.06 : 0;
-    const z = lerp(s.cam[0], s.cam[1], t) + punch, px = lerp(s.cam[2], s.cam[3], t), py = lerp(s.cam[4], s.cam[5], t);
-    if (s.seq){ const f = hFrame(t); ensureH(f); const b = hb.get(f) || nearestH(f) || IM.portrait; draw(b, s.foc, z, px, py); }
-    else draw(IM[s.key], s.foc, z, px, py);
-    if (si !== lastScene){ if (lastScene >= 0 && JUMP === null){ flash.style.opacity = .55; setTimeout(()=>flash.style.opacity=0, 40); } lastScene = si; }
-    // overlays
-    document.querySelectorAll('.ov').forEach(el => { const k = +el.dataset.scene; let a = 0;
-      if (k === si){ a = k===0 ? clamp(1 - t/.7, 0, 1) : (k===SC.length-1 ? clamp((t-.08)/.25,0,1) : clamp(Math.min((t-.10)/.18, (.92-t)/.18), 0, 1)); }
-      el.style.opacity = a; if (k) el.style.transform = `translateY(${(1-a)*18}px)`; });
-    if (ro.textContent !== s.label) ro.textContent = s.label; robar.style.width = (progress*100).toFixed(1)+'%';
-  }
-  function tick(){ try{ const r = film.getBoundingClientRect(); progress = clamp(-r.top/(r.height-innerHeight), 0, 1); if (progress !== lastP){ lastP = progress; render(); } }catch(e){ console.warn(e); } requestAnimationFrame(tick); }
-
   /* build sections */
   function build(){
     const track = document.getElementById('track'); const dist = () => track.scrollWidth - innerWidth;
-    gsap.to(track, { x: () => -dist(), ease:'none', scrollTrigger:{ trigger:'#strip', start:'top top', end:() => '+='+dist(), pin:'#strip .pin', scrub:true, invalidateOnRefresh:true, anticipatePin:1 } });
+    const stripTween = gsap.to(track, { x: () => -dist(), ease:'none', scrollTrigger:{ trigger:'#strip', start:'top top', end:() => '+='+dist(), pin:'#strip .pin', scrub:true, invalidateOnRefresh:true, anticipatePin:1 } });
+    document.querySelectorAll('#strip figure img').forEach((img,i) => gsap.fromTo(img, { xPercent: 0 }, { xPercent: -8 - (i%3)*3, ease:'none', scrollTrigger:{ trigger: img.parentElement, containerAnimation: stripTween, start:'left right', end:'right left', scrub:true } }));
+    // speed band: car crosses right→left, ghost text drifts, dust trails
+    gsap.fromTo('#bandcar', { xPercent: 0, x: () => innerWidth }, { x: () => -innerWidth*0.2, ease:'none', scrollTrigger:{ trigger:'#band', start:'top bottom', end:'bottom top', scrub:true, invalidateOnRefresh:true } });
+    gsap.fromTo('#band .ghost', { x: 0 }, { x: () => -innerWidth*0.6, ease:'none', scrollTrigger:{ trigger:'#band', start:'top bottom', end:'bottom top', scrub:true, invalidateOnRefresh:true } });
+    gsap.fromTo('#banddust', { x: () => innerWidth*1.1, opacity:0 }, { x: () => innerWidth*0.1, opacity:.9, ease:'none', scrollTrigger:{ trigger:'#band', start:'top bottom', end:'bottom top', scrub:true, invalidateOnRefresh:true } });
+    // section titles: clip reveal
+    document.querySelectorAll('.head h2').forEach(h => gsap.to(h, { clipPath:'inset(0 0 0% 0)', duration:1.1, ease:'power4.out', scrollTrigger:{ trigger:h, start:'top 85%', once:true } }));
+    // strip parallax per figure
     document.querySelectorAll('.rev').forEach(el => gsap.to(el, { opacity:1, y:0, duration:1, ease:'power3.out', scrollTrigger:{ trigger:el, start:'top 88%', once:true } }));
     ScrollTrigger.create({ trigger:'#film', start:'top top', end:'bottom bottom', onToggle: st => { if (!st.isActive) ro.textContent = ''; } });
   }
@@ -275,19 +252,14 @@
     if (document.hidden) tl.progress(1); return tl; }
 
   /* load */
-  const ldbar = document.getElementById('ldbar'), ldnum = document.getElementById('ldnum'); let done = 0; const total = Object.keys(SRC).length + HF;
-  const prog = () => { done++; const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = p+'%'; };
-  (async () => {
-    await Promise.all(Object.entries(SRC).map(([k,src]) => fetch(src).then(r=>r.blob()).then(b=>createImageBitmap(b)).then(b=>{ IM[k]=b; prog(); })));
-    let n = 0; const worker = async () => { while (n < HF){ const i = n++; try{ hblobs[i] = await fetch(`frames/h_${String(i+1).padStart(3,'0')}.jpg`).then(r=>r.blob()); }catch(e){} prog(); } };
-    await Promise.all(Array.from({length:8}, worker)); ensureH(0);
-    if (document.fonts) await document.fonts.ready;
-    resize(); build(); requestAnimationFrame(tick);
-    setTimeout(() => document.querySelectorAll('#strip img, .who img, footer img').forEach(im => { const w = new Image(); w.decoding='async'; w.src = im.currentSrc || im.src; w.decode && w.decode().catch(()=>{}); }), 800);
+  function start(){
+    build();
     if (JUMP !== null) document.getElementById('loader').style.transition='none'; document.getElementById('loader').classList.add('hide');
-    if (JUMP !== null){ document.getElementById('hero').style.opacity = 1; requestAnimationFrame(() => { scrollTo(0, +JUMP||0); ScrollTrigger.refresh(); ScrollTrigger.update(); ScrollTrigger.getAll().forEach(st => { if (st.animation && st.scrub) st.animation.progress(st.progress); }); setTimeout(() => { lastP=-1; render(); window.__ready = true; }, 500); }); }
+    setTimeout(() => document.querySelectorAll('#strip img, .who img, footer img').forEach(im => { const w = new Image(); w.decoding='async'; w.src = im.currentSrc || im.src; w.decode && w.decode().catch(()=>{}); }), 800);
+    if (JUMP !== null){ document.getElementById('hero').style.opacity = 1; requestAnimationFrame(() => { scrollTo(0, +JUMP||0); ScrollTrigger.refresh(); ScrollTrigger.update(); ScrollTrigger.getAll().forEach(st => { if (st.animation && st.scrub) st.animation.progress(st.progress); }); setTimeout(() => { window.__filmRender && window.__filmRender(); window.__ready = true; }, 600); }); }
     else { const tl = intro(); ScrollTrigger.refresh(); tl.eventCallback('onComplete', () => { window.__ready = true; }); }
-  })().catch(e => { console.error(e); document.getElementById('loader').classList.add('hide'); window.__ready = true; });
+  }
+  if (window.__film && window.__film.ready) start(); else document.addEventListener('film:ready', start, { once:true });
 })();
 </script>
 </body>
