@@ -647,8 +647,9 @@
     const firstReady = new Promise(res => { const t = setInterval(() => { if (blobs[0]){ clearInterval(t); res(); } }, 30); });
     async function worker(){ while (next < total){ const i = next++; try{ blobs[i] = await fetch(`frames/f_${String(i+1).padStart(4,'0')}.jpg`).then(r => r.blob()); }catch(e){} done++; if (done % 6 === 0 || done === total){ const p = Math.round(done/total*100); ldbar.style.width = p+'%'; ldnum.textContent = 'FILM · '+p+'%'; } } }
     const pump = Promise.all(Array.from({length:CONC}, worker));
-    await firstReady; await new Promise(res => { const t = setInterval(() => { if (blobs[0] && blobs[1] && blobs[2]){ clearInterval(t); res(); } }, 30); });
-    return pump;
+    await firstReady; await new Promise(res => { const t = setInterval(() => { let n=0; for (let i=0;i<30;i++) if (blobs[i]) n++; if (n>=30 || done>=total){ clearInterval(t); res(); } }, 40); });
+    pump.then(() => { ldbar.style.width='100%'; });
+    return;
   }
 
   function build(){

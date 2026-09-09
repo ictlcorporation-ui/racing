@@ -96,3 +96,9 @@
 - Folder: site-v5/ (server: python3 site-v5/serve.py 8768). Motor „stills”: 7 ancore + 61 cadre din ch1 (casca, cameră fixă), zoom/dissolve/whip cu praf și confetti desenate în canvas, totul determinist pe scroll.
 - Motiv: video generat strică textele mici în cadrele din mijloc; la scroll fiecare cadru e o poză înghețată → doar imagini verificate.
 - Cost: 0 credite. Jank max 29 ms.
+
+## Film v6 (2026-09-09) — Kling 3.0 4K (ALES după bake-off)
+- Bake-off pe cap. 2 (cel mai greu): Kling 3.0 4K (30 cr) = texte stabile, culori stabile, 3852×2152; Wan 3.0 Prime 1080p (30) = bun dar mai moale; Seedance 2.5 1080p (45) = virează culorile spre violet. Veo 3.1 nu are end_image.
+- Lanț build/film5/run-kling.sh (start = ultimul cadru anterior, end = ancora reală). 6 × 30 = 180 cr + bake-off 105.
+- Master 4K build/film5/master.mp4 (721 cadre) → site-v3/frames 361 cadre la 1440 px (54 MB); loader pornește după 30 de cadre.
+- ch6: Kling a făcut o tăietură de montaj hairpin→podium (nu coborâre continuă). De regenerat doar dacă cere clientul.
