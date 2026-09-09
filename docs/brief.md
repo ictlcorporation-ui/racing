@@ -78,3 +78,10 @@
 - Ancore în build/anchors/final/ (portret service park apus, cockpit, pietriș, săritură, ac de păr, podium). Editate din pozele reale; „Budureasca” corectat cu logo-ul ca referință; ICTL Corp adăugat pe aripa spate + aripa față.
 - Lanț în build/film3/ (run-chain.sh). Toate 5 capitole OK. Credite: ancore 12 + corecții 14 + clipuri 37.5 + 1 job test aruncat 7.5.
 - Site-v3: hero afișează assets/anchors/portrait.jpg la rezoluție întreagă, se topește în film pe primele 3.5% de scroll.
+
+## Film v4 (2026-09-09) — 720p standard, 6 capitole (FINAL de lucru)
+- Ancore finale în build/anchors/final/: portrait (compus: v3 + mașina din helmeton v5), helmeton (v5, ecuson „Mihai Manole” copiat din v3), cockpit, gravel (v5, un singur Budureasca), jump (v3), hairpin (v2), podium (v5, ICTL întreg).
+- Lanț build/film4/run-chain.sh, 720p/std (22.5 cr/clip). ch3+ch4 regenerate după corectarea ancorei gravel. Seam ch4→ch5 SSIM 0.93.
+- Master: build/film4/master.mp4 (1280x720, 721 cadre) → site-v3/frames (361 cadre).
+- Site: focus 70% pe ecran vertical în primele capitole, beat-uri pentru 6 capitole, jank max 24 ms.
+- Credite v4: ancore ~16 + clipuri 8 × 22.5 = 180 + 1 job vechi 22.5.
