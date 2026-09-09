@@ -52,10 +52,11 @@
   @media (max-width:820px){#hdr{grid-template-columns:1fr auto}#hdr .readout{display:none}#hdr .odo{display:none}}
 
   /* ---------- film ---------- */
-  #film{position:relative;height:860vh;background:var(--carbon)}
+  #film{position:relative;height:1000vh;background:var(--carbon)}
   #film .stage{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--carbon)}
   #film canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  #film .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+  #film .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;pointer-events:none}
+  @media (orientation:portrait){ #film .still{object-position:70% 50%} }
   #film .grain{position:absolute;inset:0;pointer-events:none;opacity:.10;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");background-size:180px 180px}
   #film .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(0,0,0,.45) 100%)}
   #film .fade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(17,17,17,0) 40%,var(--seam) 100%);opacity:0}
@@ -88,7 +89,7 @@
   #b-hero .hint{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);font-family:var(--font-m);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(241,237,227,.7);display:flex;align-items:center;gap:10px;white-space:nowrap}
   #b-hero .hint i{width:1px;height:34px;background:linear-gradient(var(--red),transparent);animation:drop 1.6s ease-in-out infinite}
   @keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
-  @media (max-width:820px){#b-hero .card{right:auto;left:var(--gutter);bottom:30vh;width:200px}#b-hero .sub{bottom:12vh;font-size:11px}#b-hero .hint{display:none}.beat.right{top:14vh}}
+  @media (max-width:820px){#b-hero .card{right:auto;left:var(--gutter);bottom:30vh;width:200px}#b-hero .sub{bottom:12vh;font-size:11px}#b-hero .hint{display:none}.beat.right{top:14vh}.beat h2{font-size:clamp(26px,8vw,40px)}.beat p{font-size:15px}.beat .glass{padding:12px 14px}#b-hero .t1,#b-hero .t2{font-size:clamp(48px,15vw,90px)}}
 
   /* ---------- landing zone (seam) ---------- */
   #landing{background:linear-gradient(180deg,var(--seam) 0%,var(--carbon) 60%);height:34vh}
@@ -319,10 +320,11 @@
       <div class="hint"><i></i> Derulează · filmul pornește</div>
     </div>
 
-    <div class="beat right" data-in="0.20" data-peak="0.27" data-out="0.36"><div class="glass"><div class="pn">Capitolul 1 · cockpit</div><h2>Viziera <em>jos</em>.<br>Nota citită.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
-    <div class="beat left" data-in="0.40" data-peak="0.47" data-out="0.56"><div class="glass"><div class="pn">Capitolul 2 · S4 lung</div><h2>Pietrișul nu <em>iartă</em>.</h2><p>Raliul Maramureșului 2026. Locul 2 la general, la deschiderea sezonului.</p></div></div>
-    <div class="beat right" data-in="0.60" data-peak="0.67" data-out="0.75"><div class="glass"><div class="pn">Capitolul 3 · săritură</div><h2>Ține <em>drept</em>.</h2><p>Patru roți în aer. Nota spunea „săritură, ține”. Exact așa.</p></div></div>
-    <div class="beat left" data-in="0.78" data-peak="0.84" data-out="0.91"><div class="glass"><div class="pn">Capitolul 4 · D2 strâns</div><h2>Acul de <em>păr</em>.</h2><p>Frână târziu, întoarce tot, pe gaz. Nu tăia.</p></div></div>
+    <div class="beat right" data-in="0.12" data-peak="0.165" data-out="0.22"><div class="glass"><div class="pn">Capitolul 1 · casca</div><h2>Casca <em>sus</em>.<br>Nota citită.</h2><p>Înainte de start, totul e deja în cap: fiecare curbă, fiecare notă.</p></div></div>
+    <div class="beat left" data-in="0.29" data-peak="0.335" data-out="0.40"><div class="glass"><div class="pn">Capitolul 2 · cockpit</div><h2>Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
+    <div class="beat right" data-in="0.46" data-peak="0.50" data-out="0.56"><div class="glass"><div class="pn">Capitolul 3 · S4 lung</div><h2>Pietrișul nu <em>iartă</em>.</h2><p>Raliul Maramureșului 2026. Locul 2 la general, la deschiderea sezonului.</p></div></div>
+    <div class="beat left" data-in="0.63" data-peak="0.667" data-out="0.72"><div class="glass"><div class="pn">Capitolul 4 · săritură</div><h2>Ține <em>drept</em>.</h2><p>Patru roți în aer. Nota spunea „săritură, ține”. Exact așa.</p></div></div>
+    <div class="beat right" data-in="0.79" data-peak="0.835" data-out="0.89"><div class="glass"><div class="pn">Capitolul 5 · D2 strâns</div><h2>Acul de <em>păr</em>.</h2><p>Frână târziu, întoarce tot, pe gaz. Nu tăia.</p></div></div>
     <div class="beat left" data-in="0.93" data-peak="0.985" data-out="2"><div class="glass"><div class="pn">Sosire · podium</div><h2>Mihai Manole<br><em>Florin Dorca</em></h2><p>Locul 2, Raliul Maramureșului 2026. Restul se scrie pe probele care urmează.</p></div></div>
 
     <div class="fade" id="fade"></div>
@@ -582,8 +584,8 @@
   let FRAME_COUNT = 0, FRAME_W = 1280, FRAME_H = 720, SEAM = '#1b3144';
   const blobs = [], bitmaps = new Map(), decoding = new Set();
   const B_AHEAD = 12, B_KEEP = 16, MAX_DECODES = 4; let bmpCenter = -999, displayed = -1;
-  let target = 0, current = 0, progress = 0;
-  const CHAPTERS = [[0,'Start · portret'],[.18,'PS1 · cockpit'],[.38,'S4 lung · pietriș'],[.58,'săritură · ține'],[.76,'D2 strâns · ac de păr'],[.93,'Sosire · podium']];
+  let target = 0, current = 0, progress = 0, focusX = 0.5;
+  const CHAPTERS = [[0,'Start · portret'],[.12,'casca · viziera sus'],[.29,'PS1 · cockpit'],[.46,'S4 lung · pietriș'],[.63,'săritură · ține'],[.79,'D2 strâns · ac de păr'],[.93,'Sosire · podium']];
   const KM = 12.4;
 
   function resize(){ cv.width = Math.round(innerWidth*DPR); cv.height = Math.round(innerHeight*DPR); cv.style.width = innerWidth+'px'; cv.style.height = innerHeight+'px'; if (displayed >= 0) drawFrame(displayed, true); }
@@ -592,7 +594,7 @@
     let b = bitmaps.get(i); if (!b) b = nearestBitmap(i); if (!b) return;
     if (!force && i === displayed) return; displayed = i;
     const cw = cv.width, ch = cv.height, s = Math.max(cw/b.width, ch/b.height), w = b.width*s, h = b.height*s;
-    ctx.drawImage(b, (cw-w)/2, (ch-h)/2, w, h);
+    ctx.drawImage(b, (cw-w)*focusX, (ch-h)/2, w, h);
     sampleTop();
   }
   function nearestBitmap(i){ for (let d=1; d<FRAME_COUNT; d++){ if (bitmaps.has(i-d)) return bitmaps.get(i-d); if (bitmaps.has(i+d)) return bitmaps.get(i+d); } return null; }
@@ -621,6 +623,8 @@
     try{
       const r = film.getBoundingClientRect(); progress = Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
       target = progress * (FRAME_COUNT - 1);
+      // portrait screens: keep Mihai in frame during the first two chapters, then centre on the car
+      const portraitScreen = innerWidth < innerHeight; const fx = portraitScreen ? (progress < .15 ? .70 : progress < .30 ? .70 - (progress-.15)/.15*.25 : .50) : .5; if (fx !== focusX){ focusX = fx; if (displayed >= 0) drawFrame(displayed, true); }
       current += (target - current) * (JUMP !== null ? 1 : 0.16); if (Math.abs(target - current) < .05) current = target;
       const idx = Math.round(current); ensureBitmaps(idx); drawFrame(idx, false);
       for (const b of beats){ const a = beatAlpha(b, progress); b.el.style.opacity = a; if (b.el.id !== 'b-hero') b.el.style.transform = (b.el.classList.contains('center') ? 'translate(-50%,-50%) ' : '') + `translateY(${(1-a)*24}px)`; }
