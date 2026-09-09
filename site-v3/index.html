@@ -321,7 +321,7 @@
     </div>
 
     <div class="beat right" data-in="0.12" data-peak="0.165" data-out="0.22"><div class="glass"><div class="pn">Capitolul 1 · casca</div><h2>Casca <em>sus</em>.<br>Nota citită.</h2><p>Înainte de start, totul e deja în cap: fiecare curbă, fiecare notă.</p></div></div>
-    <div class="beat left" data-in="0.29" data-peak="0.335" data-out="0.40"><div class="glass"><div class="pn">Capitolul 2 · cockpit</div><h2>Viziera <em>jos</em>.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
+    <div class="beat left" data-in="0.29" data-peak="0.335" data-out="0.40"><div class="glass"><div class="pn">Capitolul 2 · la volan</div><h2>Portiera se <em>închide</em>.</h2><p>Copilotul citește, pilotul execută. Între ele, o fracțiune de secundă.</p></div></div>
     <div class="beat right" data-in="0.46" data-peak="0.50" data-out="0.56"><div class="glass"><div class="pn">Capitolul 3 · S4 lung</div><h2>Pietrișul nu <em>iartă</em>.</h2><p>Raliul Maramureșului 2026. Locul 2 la general, la deschiderea sezonului.</p></div></div>
     <div class="beat left" data-in="0.63" data-peak="0.667" data-out="0.72"><div class="glass"><div class="pn">Capitolul 4 · săritură</div><h2>Ține <em>drept</em>.</h2><p>Patru roți în aer. Nota spunea „săritură, ține”. Exact așa.</p></div></div>
     <div class="beat right" data-in="0.79" data-peak="0.835" data-out="0.89"><div class="glass"><div class="pn">Capitolul 5 · D2 strâns</div><h2>Acul de <em>păr</em>.</h2><p>Frână târziu, întoarce tot, pe gaz. Nu tăia.</p></div></div>
@@ -585,7 +585,7 @@
   const blobs = [], bitmaps = new Map(), decoding = new Set();
   const B_AHEAD = 12, B_KEEP = 16, MAX_DECODES = 4; let bmpCenter = -999, displayed = -1;
   let target = 0, current = 0, progress = 0, focusX = 0.5;
-  const CHAPTERS = [[0,'Start · portret'],[.12,'casca · viziera sus'],[.29,'PS1 · cockpit'],[.46,'S4 lung · pietriș'],[.63,'săritură · ține'],[.79,'D2 strâns · ac de păr'],[.93,'Sosire · podium']];
+  const CHAPTERS = [[0,'Start · portret'],[.12,'casca · viziera sus'],[.29,'PS1 · la volan'],[.46,'S4 lung · pietriș'],[.63,'săritură · ține'],[.79,'D2 strâns · ac de păr'],[.93,'Sosire · podium']];
   const KM = 12.4;
 
   function resize(){ cv.width = Math.round(innerWidth*DPR); cv.height = Math.round(innerHeight*DPR); cv.style.width = innerWidth+'px'; cv.style.height = innerHeight+'px'; if (displayed >= 0) drawFrame(displayed, true); }

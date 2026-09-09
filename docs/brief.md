@@ -85,3 +85,9 @@
 - Master: build/film4/master.mp4 (1280x720, 721 cadre) → site-v3/frames (361 cadre).
 - Site: focus 70% pe ecran vertical în primele capitole, beat-uri pentru 6 capitole, jank max 24 ms.
 - Credite v4: ancore ~16 + clipuri 8 × 22.5 = 180 + 1 job vechi 22.5.
+
+## Film v4.2 (2026-09-09) — regula „fără close-up la mijloc”
+- ch2: cameră fixă largă, portret cu cască → el în mașină (ancoră incar, build/anchors/v7/incar-final.png; nume pe geam scrise cu PIL).
+- ch3: din service park (larg) → pietriș spate; mașina mereu la distanță. Seam ch3→ch4 SSIM 0.87.
+- Hero: wordmark mic sus-stânga (portretul rămâne curat).
+- Lecție: modelul video strică textele când camera se apropie la mijlocul clipului; close-up-urile doar la capete (ancore reale).
