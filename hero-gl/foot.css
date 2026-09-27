@@ -1,0 +1,15 @@
+/* ============ „Hai să vorbim”: titlul mare la mijloc, câte o poză înclinată pe laterale (vezi foot.js) ============ */
+.foot-cta.fv .h-big{font-size:8.6rem;line-height:1}
+.fv{display:grid;grid-template-columns:1fr minmax(0,40rem) 1fr;align-items:center;gap:3rem}
+.fv-img{position:relative;margin:0;border-radius:1rem;overflow:hidden;background:#1d1d1c;aspect-ratio:3/4;max-width:20rem;width:100%;transition:transform .8s var(--ease)}
+.fv-img img{display:block;width:100%;height:100%;object-fit:cover}
+.fv-img.l{justify-self:start;transform:rotate(-5deg)}
+.fv-img.r{justify-self:end;transform:rotate(5deg)}
+.fv-img.l:hover{transform:rotate(-2deg) scale(1.03)}
+.fv-img.r:hover{transform:rotate(2deg) scale(1.03)}
+@media (max-width:991px){
+  .fv{grid-template-columns:1fr;gap:2.4rem}
+  .fv-img{display:none}
+  .foot-cta.fv .h-big{font-size:5rem}
+}
+@media (max-width:767px){ .foot-cta.fv .h-big{font-size:3.8rem} }

@@ -28,7 +28,7 @@ export function createPreloader() {
   }).join('');
   const G = (id) => `<g id="${id}" transform="translate(${cx} ${cy}) scale(${S0}) translate(-36 -33)">`;
   const root = document.createElement('div');
-  root.className = 'pl'; root.setAttribute('aria-label', 'Se încarcă'); root.setAttribute('role', 'progressbar');
+  root.className = 'pl'; root.setAttribute('aria-label', window.I18N ? I18N.t('Se încarcă', 'Loading') : 'Se încarcă'); root.setAttribute('role', 'progressbar');
   root.innerHTML = `<svg class="pl-svg" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
     <defs><mask id="plMask" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}"><rect width="${W}" height="${H}" fill="#fff"/>
       ${G('plMaskG')}<path d="${MM_D}" transform="${MM_T}" fill="none" stroke="#000" stroke-width="6.5" stroke-linejoin="miter" opacity="0"/></g></mask></defs>

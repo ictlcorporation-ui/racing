@@ -729,8 +729,8 @@ class HeroGL {
     this.head.position.set(0, -F.eyes * s, 0);
     const topW = (F.top - F.eyes) * s, bottomW = (F.bottom - F.eyes) * s; // vârful căștii / marginea de jos a planului
     // pe îngust: bustul lipit jos (cu 3% sub marginea ecranului, ca să nu se vadă capătul pozei); pe lat: lipit sus
-    // + 6% din înălțime: Mihai stă puțin mai jos, cu aer deasupra căștii (cerut de client)
-    const yc = (!wide && (topW - bottomW) <= visH ? bottomW + visH * 0.53 : topW - visH / 2) + visH * 0.06;
+    // + 6% din înălțime: Mihai stă puțin mai jos, cu aer deasupra căștii (cerut de client); pe telefon doar 2% (clientul: „un pic mai sus”)
+    const yc = (!wide && (topW - bottomW) <= visH ? bottomW + visH * 0.53 : topW - visH / 2) + visH * (aspect < 0.8 ? 0.02 : 0.06);
     if (INSPECT) {
       // casca (centrul ei ≈ local +0.30) în mijlocul ecranului, mărită
       const ycI = (0.30 - F.eyes) * s; this.camera.zoom = 2.2;
@@ -887,22 +887,23 @@ gl.load((p) => pre.set(p)).then(() => {
       lenis.start(); m.intro({ gl, lenis, revealLines, drawPath }); bindScroll(); bindHelmet();
     });
   });
-}).catch((e) => { console.error(e); pre.error('Eroare la încărcare'); });
+}).catch((e) => { console.error(e); pre.error(window.I18N ? I18N.t('Eroare la încărcare', 'Loading error') : 'Eroare la încărcare'); });
 
 function intro() {
   lenis.start();
   const outline = $('#heroCard .outline path'), stage = $('#stagePath');
-  drawPath(outline); drawPath(stage);
+  drawPath(outline); if (stage) drawPath(stage);
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   tl.add(revealLines($('#nav .wordmark'), { stagger: 0.1 }), 0.4)
     .to('#navMark', { opacity: 1, duration: 1 }, 0.8)
     .to('#navRight', { opacity: 1, y: 0, duration: 1 }, 0.8)
     .add(revealLines($('#heroTitle'), { stagger: 0.1 }), 0.7)
     .to(outline, { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, 0.9)
-    .to(stage, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 1.2)
+    .to(stage || {}, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 1.2)
+    .to('#heroTitle .hx, #heroCard .hx', { opacity: 1, y: 0, duration: 1, stagger: 0.05 }, 1.1) // elementele din variantele hero-left.js
     .add(revealLines($('#heroCard'), { stagger: 0.07 }), 1.0)
     .to('#rule1', { scaleX: 1, duration: 1, ease: 'power2.inOut' }, 1.5)
-    .add(() => $('#heroCard .hl').classList.add('on'), 1.6)
+    .add(() => $('#heroCard .hl')?.classList.add('on'), 1.6)
     .add(revealLines($('#heroRight'), { stagger: 0.07 }), 1.3);
   bindScroll();
   bindHelmet();
@@ -946,7 +947,7 @@ function bindScroll() {
       sc.exit = ss(0.42, 0.9, p);
     },
   });
-  const fade = document.querySelectorAll(THEME.heroFade || '#heroTitle, #heroCard, #heroRight');
+  const fade = document.querySelectorAll(THEME.heroFade || '#heroTitle, #heroCard, #heroRight, #heroMob');
   if (fade.length) gsap.to(fade, { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '#heroTrack', start: 'top top', end: () => '+=' + innerHeight * 0.3, scrub: true } });
   ScrollTrigger.refresh();
   // secțiunile de după hero: după fonturi (SplitText împarte rândurile pe metricile finale)

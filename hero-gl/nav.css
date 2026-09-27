@@ -1,0 +1,112 @@
+/* ============ navbar + meniu („Panou lateral”), vezi nav.js ============ */
+
+/* butonul de meniu: trei linii; la deschidere cea din mijloc dispare, celelalte fac X */
+.ham{position:relative;width:2.6rem;height:2.6rem;border-radius:50%;background:var(--ink);color:var(--offwhite);display:grid;place-items:center;border:0;cursor:pointer;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),transform .35s var(--ease)}
+.ham:hover{transform:scale(1.06)}
+body[data-theme="dark"] .ham{background:var(--offwhite);color:var(--ink)}
+.ham i,.mn-x i{position:absolute;left:50%;top:50%;width:1rem;height:2px;margin:-1px 0 0 -.5rem;background:currentColor;transition:transform .55s var(--ease)}
+.ham i{transition:transform .55s var(--ease),opacity .3s}
+.ham i:nth-child(1){transform:translateY(-5px)}
+.ham i:nth-child(3){transform:translateY(5px)}
+.ham[aria-expanded="true"] i:nth-child(1),.mn-x i:nth-child(1){transform:rotate(45deg)}
+.ham[aria-expanded="true"] i:nth-child(2){opacity:0;transform:scaleX(0)}
+.ham[aria-expanded="true"] i:nth-child(3),.mn-x i:nth-child(2){transform:rotate(-45deg)}
+.mn-x{position:relative;width:2.6rem;height:2.6rem;border-radius:50%;border:0;cursor:pointer;flex:none;display:block;background:var(--ink);color:var(--offwhite);transition:transform .35s var(--ease)}
+.mn-x:hover{transform:rotate(90deg)}
+
+/* selectorul de limbă RO / EN */
+.lang{display:inline-flex;align-items:center;padding:.2rem;border-radius:99rem;border:1px solid currentColor;border-color:color-mix(in srgb,currentColor 28%,transparent);font-family:var(--b);font-weight:700;font-size:max(.62rem,11px);letter-spacing:.12em;flex:none}
+.lang a{padding:max(.45rem,6px) max(.6rem,9px);border-radius:99rem;line-height:1;opacity:.6;transition:opacity .3s,background .3s,color .3s}
+.lang a:hover{opacity:1}
+.lang a[aria-current]{opacity:1;background:var(--red);color:#fff}
+.lang-bar{height:2.6rem;padding:.3rem}
+.lang-bar a{padding:.55rem .65rem}
+@media (max-width:767px){ .lang-bar{display:none} }
+/* telefon: bara mai aerisită (client) — margini și înălțime mai mari, elemente puțin mai mari */
+@media (max-width:767px){
+  .nav{padding:1.6rem 1.6rem 1.2rem}
+  .nav .wordmark{font-size:1.85rem}
+  .nav-mark{top:1.75rem;width:4.2rem}
+  .nav-right{gap:.8rem}
+  .nav-right .btn{padding:1rem 1.2rem}
+  .ham{width:3rem;height:3rem}
+  .ham i{width:1.15rem;margin-left:-.575rem}
+}
+
+/* bara: se ascunde la scroll în jos, revine la scroll în sus; după hero are fundal mat */
+.nav{transition:color var(--dur) var(--ease),transform .7s var(--ease)}
+.nav::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .5s,background var(--dur) var(--ease);pointer-events:none;
+  background:rgba(241,240,235,.78);-webkit-backdrop-filter:blur(14px) saturate(1.2);backdrop-filter:blur(14px) saturate(1.2);border-bottom:1px solid rgba(26,26,24,.08)}
+body[data-theme="dark"] .nav::before{background:rgba(17,17,18,.66);border-bottom-color:rgba(241,240,235,.08)}
+.nav.is-solid{padding-bottom:1.1rem}
+.nav.is-solid::before{opacity:1}
+.nav.is-hidden{transform:translateY(-110%)}
+
+/* meniul: panou din dreapta, pagina estompată în spate */
+.mn{--o:0;position:fixed;inset:0;z-index:30;pointer-events:none;visibility:hidden;transition:visibility 0s .9s}
+.mn[data-open]{--o:1;pointer-events:auto;visibility:visible;transition:none}
+.mn a{color:inherit}
+.mn-bd{position:absolute;inset:0;background:rgba(17,17,18,.5);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;transition:opacity .6s}
+.mn[data-open] .mn-bd{opacity:1}
+.mn-panel{position:absolute;top:0;right:0;bottom:0;width:min(34rem,100%);background:var(--offwhite);color:var(--ink);transform:translateX(102%);transition:transform .9s var(--ease);
+  display:flex;flex-direction:column;padding:1.5rem 2rem 2rem;overflow-y:auto;overscroll-behavior:contain}
+.mn[data-open] .mn-panel{transform:none}
+.mn-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2.4rem}
+.mn-head svg{width:4.4rem;height:auto;color:var(--ink)}
+.mn-list{list-style:none;border-top:1px solid rgba(26,26,24,.14)}
+.mn-list li{position:relative;isolation:isolate;border-bottom:1px solid rgba(26,26,24,.14);opacity:0;transform:translateX(2.5rem);transition:opacity .5s,transform .8s var(--ease);transition-delay:calc(var(--o) * (.3s + var(--i) * .045s))}
+.mn[data-open] .mn-list li{opacity:1;transform:none}
+.mn-list a{position:relative;display:grid;grid-template-columns:2.2rem 1fr auto;align-items:center;padding:.85rem .6rem;overflow:hidden;transition:color .45s var(--ease)}
+.mn-list a::before{content:"";position:absolute;inset:0;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .55s var(--ease);z-index:-1}
+.mn-list a:hover,.mn-list a:focus-visible{color:#fff;outline:none}
+.mn-list a:hover::before,.mn-list a:focus-visible::before{transform:scaleX(1)}
+.mn-list .n{font-family:var(--b);font-weight:700;font-size:.6rem;letter-spacing:.16em;opacity:.55}
+.mn-list .t{font-family:var(--d);text-transform:uppercase;font-size:2.3rem;line-height:1}
+.mn-list .ar{width:1.1rem;height:1.1rem;transform:translateX(-.6rem);opacity:0;transition:transform .5s var(--ease),opacity .4s}
+.mn-list a:hover .ar,.mn-list a:focus-visible .ar{transform:none;opacity:1}
+.mn-list a.is-on .t::after{content:"";display:inline-block;width:.45rem;height:.45rem;border-radius:50%;background:var(--red);margin-left:.7rem;vertical-align:.45em}
+.mn-list a.is-on:hover .t::after{background:#fff}
+.mn-card{margin-top:auto;padding-top:2rem;display:grid;gap:1rem;opacity:0;transition:opacity .6s;transition-delay:calc(var(--o) * .65s)}
+.mn[data-open] .mn-card{opacity:1}
+.mn-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.mn-row .eb{font-family:var(--b);font-weight:700;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;line-height:1.35;opacity:.55}
+.mn-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.mn-stats div{background:#e6e5de;border-radius:.4rem;padding:.8rem .8rem .7rem}
+.mn-stats b{display:block;font-family:var(--d);font-weight:400;font-size:1.7rem;line-height:1;text-transform:uppercase}
+.mn-stats span{display:block;font-weight:700;font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;opacity:.6;margin-top:.4rem}
+.mn-btn{justify-content:center;padding:1rem}
+.mn-cta{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.mn-social{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--b);font-weight:700;font-size:.66rem;letter-spacing:.06em;opacity:.75;transition:opacity .3s}
+.mn-social:hover{opacity:1}
+.mn-social svg{width:.95rem;height:.95rem;flex:none}
+@media (max-width:767px){
+  /* telefon: panoul ia 65% din lățime (cerut de client; 50% era prea puțin); în stânga rămâne pagina, estompată — atingerea ei închide meniul */
+  .mn-panel{width:65%;min-width:12.5rem;padding:1rem .9rem calc(1.1rem + env(safe-area-inset-bottom))}
+  .mn-head{margin-bottom:1.2rem}
+  .mn-head svg{width:4.6rem} /* monograma din meniu: mai mare (client) */
+  .mn-x{width:3rem;height:3rem}
+  .mn-list .t{font-size:min(2rem,5.4vw)}
+  .mn-list .n,.mn-list .ar{display:none}
+  .mn-list a{grid-template-columns:1fr;padding:.7rem .2rem}
+  .mn-stats,.mn-row .eb{display:none}
+  .mn-btn{padding:12px 8px;font-size:max(.62rem,11px);gap:6px;letter-spacing:.1em}
+  .mn-card{padding-top:1.4rem;gap:.8rem}
+  .mn-cta{gap:1.4rem;justify-content:flex-start}
+  .mn-cta .lbl{display:none}
+  .mn-cta .mn-social svg{width:1.5rem;height:1.5rem}
+}
+
+/* spațiul liber din meniu, pe telefon: poză + Instagram (aleasă de client) */
+.mn-photo{display:none}
+@media (max-width:767px){
+  .mn .mn-photo{position:relative;display:flex;align-items:flex-end;flex:1 1 auto;min-height:9rem;margin-top:1.4rem;border-radius:.6rem;overflow:hidden;isolation:isolate;color:#fff;
+    opacity:0;transition:opacity .6s;transition-delay:calc(var(--o) * .6s)}
+  .mn[data-open] .mn-photo{opacity:1}
+  .mn-card{margin-top:0}
+  .mn-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+  .mn-photo::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0) 55%)}
+  .mx-cap{display:grid;gap:.3rem;padding:.9rem}
+  .mx-cap .eb{font-weight:700;font-size:max(.56rem,9px);letter-spacing:.16em;text-transform:uppercase;opacity:.75}
+  .mx-cap b{display:flex;align-items:center;gap:.4rem;font-weight:700;font-size:max(.62rem,10px);letter-spacing:.04em;word-break:break-all}
+  .mx-cap svg{width:1.3rem;height:1.3rem;flex:none}
+}
