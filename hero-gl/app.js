@@ -144,6 +144,8 @@ class Fluid {
 const IDLE = { sweep: 2.6, gap: 0.15, pause: 0.3 };
 // ritmul căștii transparente: desenare, cât stă desenată, ștergere (s)
 const GHOST_T = { draw: 2.0, hold: 0.8, erase: 2.0 };
+// mouse oprit pe cap: după `wait` s casca foto se umple în `fill` s, stă `hold` s, apoi se golește și vine zigzagul automat (ghost-ul)
+const HEAD_T = { wait: 0.6, fill: 2.2, hold: 1.2 };
 /* cursorul „idle” de pe referință: după 2.5 s de la încărcare / 2 s de la ultima mișcare, un zigzag de 2.5 s de sus în jos,
    apoi înapoi de jos în sus (de la 4 s), pauză 3 s, repetă */
 class IdleCursor {
@@ -160,6 +162,7 @@ class IdleCursor {
       .fromTo(p, { y: 0 }, { y: 1, duration: D, ease: 'none' }, 0).fromTo(p, { x: 0 }, { x: 1, duration: D, ease: 'power1.inOut' }, 0)
       .fromTo(p, { y: 1 }, { y: 0, duration: D, ease: 'none' }, B).fromTo(p, { x: 1 }, { x: 0, duration: D, ease: 'power1.inOut' }, B);
   }
+  restart() { if (!this.isMoving) this.tl.seek(0); } // zigzagul reia de sus (după ce casca umplută de pe cap se golește)
   update() {
     if (!this.isMoving) this.cursor.set(-Math.cos(this.progress.x * Math.PI * 4) * 0.75, Math.cos(this.progress.y * Math.PI) * 0.5);
     if (this.isMoving !== this.prev) { if (!this.isMoving) { this.tl.seek(0); this.tl.play(); } else this.tl.pause(); }
@@ -780,10 +783,16 @@ class HeroGL {
       // conturul căștii în NDC (pentru zigzagul automat)
       this.helmNdc = { x: c.x, y: c.y, rx: Math.abs(ex.x - c.x), ry: Math.abs(ey.y - c.y) };
       const dx = (this.ndc.x - c.x) * this.sizes.w / 2, dy = (this.ndc.y - c.y) * this.sizes.h / 2;
-      // umplerea pornește doar când mouse-ul STĂ pe cap (> 0.6 s fără mișcare); cât se mișcă rămâne doar dâra (cerut de client)
+      // umplerea pornește doar când mouse-ul STĂ pe cap (> 0.6 s fără mișcare); cât se mișcă rămâne doar dâra (cerut de client).
+      // umplerea nu ține la nesfârșit: după ce stă plină, se golește și vine zigzagul automat, ca oriunde altundeva pe ecran
+      // (altfel, cu mouse-ul lăsat pe cască, ghost-ul nu mai apărea deloc — observat de client)
+      const rest = this.time - this.lastMove;
       const inside = !IS_TOUCH && this.hasMouse && (dx * dx) / (rx * rx) + (dy * dy) / (ry * ry) < 1 && this.scroll.cursorIntensity > 0.5 && this.scroll.exit < 0.01
-        && this.time - this.lastMove > 0.6;
-      if (inside !== !!this.headHover) { this.headHover = inside; window.dispatchEvent(new CustomEvent('head-hover', { detail: inside })); }
+        && rest > HEAD_T.wait && rest < HEAD_T.wait + HEAD_T.fill + HEAD_T.hold;
+      if (inside !== !!this.headHover) {
+        if (this.headHover && rest >= HEAD_T.wait + HEAD_T.fill + HEAD_T.hold) this.idle.restart();
+        this.headHover = inside; window.dispatchEvent(new CustomEvent('head-hover', { detail: inside }));
+      }
       const u = this.fluid.m.out.uniforms; u.uHR.value = 0; u.uAsp.value = this.sizes.w / this.sizes.h; u.uTime.value = this.time;
       if (this.helmet && this.helmet.u) { const hu = this.helmet.u; hu.uHoverR.value = 0; hu.uHoverAsp.value = u.uAsp.value; }
     }
@@ -897,7 +906,7 @@ function bindHelmet() {
   // ieșirea: mai lentă decât pe referință (1 s expo.inOut) — cerut de client
   const off = () => gsap.to(gl.state, { helmet: 0, duration: 1.8, ease: 'power2.inOut', overwrite: 'auto' });
   // capul: umplere mai lentă decât rândul (clientul: „se umple prea repede”)
-  const onHead = () => gsap.to(gl.state, { helmet: 1, duration: 2.2, ease: 'power2.inOut', overwrite: 'auto' });
+  const onHead = () => gsap.to(gl.state, { helmet: 1, duration: HEAD_T.fill, ease: 'power2.inOut', overwrite: 'auto' });
   let rowIn = false, headIn = false; const sync = () => (rowIn ? on() : headIn ? onHead() : off());
   if (isTouch) { let v = false; row.addEventListener('click', (e) => { e.preventDefault(); v = !v; v ? on() : off(); }); }
   else {

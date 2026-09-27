@@ -157,3 +157,4 @@ Casca-fantomă: sticlă mată albă (alpha 0.16) + linii subțiri deschise, doar
 - Fix: pete albe pe obraji lângă gură = marginile din față ale apărătorilor de obraji ale căștii transparente (vizibile mai ales cu umplerea ×1.6 de pe mobil); tăiate în shader (|x| < 0.30–0.42, y < -0.18, z > 0).
 - Zigzagul automat (client: „pauza prea mare”): încadrat în conturul căștii (helmNdc) în loc de tot ecranul ca pe referință; IDLE gap 0.15 s, pauză 0.3 s.
 - Zigzag 2.6 s / trecere; pensula pe telefon 28 (client: „prea subțire”).
+- Fix (client): cu mouse-ul lăsat pe cască, zigzagul automat („ghost-ul”) nu mai apărea — umplerea de pe cap ținea cât stătea mouse-ul. Acum (`HEAD_T`): după 0.6 s se umple în 2.2 s, stă 1.2 s, apoi se golește (1.8 s) și zigzagul reia de sus, ca oriunde pe ecran. O nouă mișcare + oprire pe cap o reia.
