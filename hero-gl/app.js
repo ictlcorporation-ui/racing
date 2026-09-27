@@ -17,7 +17,8 @@ const isTouch = window.matchMedia('(hover: none), (pointer: coarse)').matches;
 const $ = (s, r = document) => r.querySelector(s);
 
 /* ---------------- Lenis + GSAP ticker ---------------- */
-const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: true });
+// pe telefon / tabletă derularea rămâne cea nativă (syncTouch sacada pe iOS — client); Lenis netezește doar rotița mouse-ului
+const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
 lenis.on('scroll', ScrollTrigger.update);
 gsap.ticker.add((t) => lenis.raf(t * 1000));
 gsap.ticker.lagSmoothing(0);
@@ -760,11 +761,15 @@ class HeroGL {
     window.addEventListener('resize', () => this.resize());
   }
 
-  measure() { return { w: Math.max(1, this.wrap.clientWidth), h: Math.max(1, this.wrap.clientHeight), dpr: Math.min(devicePixelRatio, 2) }; }
+  // pe ecranele tactile densitatea e plafonată la 1.5 (de la 2): ~45% mai puțini pixeli de desenat la fiecare cadru
+  measure() { return { w: Math.max(1, this.wrap.clientWidth), h: Math.max(1, this.wrap.clientHeight), dpr: Math.min(devicePixelRatio, IS_TOUCH ? 1.5 : 2) }; }
 
   resize() {
     const s = this.measure();
     if (s.w === this.sizes.w && s.h === this.sizes.h && s.dpr === this.sizes.dpr && this.head) return;
+    // pe telefon bara browserului se strânge / se lărgește la derulare: o schimbare mică doar de înălțime nu mai realocă WebGL-ul
+    // și nu mai resetează simularea (asta sacada derularea)
+    if (IS_TOUCH && this.head && s.w === this.sizes.w && s.dpr === this.sizes.dpr && Math.abs(s.h - this.sizes.h) < 200) return;
     this.sizes = s;
     this.renderer.setPixelRatio(this.sizes.dpr); this.renderer.setSize(this.sizes.w, this.sizes.h, false);
     this.rt.setSize(this.sizes.w * this.sizes.dpr, this.sizes.h * this.sizes.dpr);
@@ -844,6 +849,10 @@ class HeroGL {
     if (!Number.isFinite(this.mouse.value.x + this.mouse.value.y)) this.mouse.value.set(0, 0);
 
     if (!this.state.rendering) return;
+    // după ce portretul a ieșit din hero rămâne doar fundalul topografic: fără cască / cap și desenat la 30 de cadre pe secundă
+    const gone = this.scroll.exit >= 0.999;
+    this.helmet.group && (this.helmet.group.visible = !gone);
+    if (gone && (this._odd = !this._odd)) return;
     // parallax cameră (aceeași intensitate ca pe referință: 0.075) + dolly din scroll
     const m = this.mouse.value, sc = this.scroll;
     if (INSPECT) this.camGroup.position.set(0, 0, 0);
