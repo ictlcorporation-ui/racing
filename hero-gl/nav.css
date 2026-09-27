@@ -43,7 +43,7 @@ body[data-theme="dark"] .nav::before{background:rgba(17,17,18,.66);border-bottom
 .nav.is-hidden{transform:translateY(-110%)}
 
 /* meniul: panou din dreapta, pagina estompată în spate */
-.mn{--o:0;position:fixed;inset:0;z-index:30;pointer-events:none;visibility:hidden;transition:visibility 0s .9s}
+.mn{--o:0;position:fixed;inset:0;z-index:30;pointer-events:none;visibility:hidden;transition:visibility 0s .9s;overflow:hidden} /* panoul ascuns în dreapta nu mai lărgește pagina (pe iPhone se putea trage lateral) */
 .mn[data-open]{--o:1;pointer-events:auto;visibility:visible;transition:none}
 .mn a{color:inherit}
 .mn-bd{position:absolute;inset:0;background:rgba(17,17,18,.5);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;transition:opacity .6s}

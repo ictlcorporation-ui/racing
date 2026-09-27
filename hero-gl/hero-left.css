@@ -70,7 +70,7 @@
   @media (prefers-reduced-motion:reduce){ .hm-ticker .run{animation:none} }
 
   /* fereastra cu fișa completă */
-  .hm-pop{display:block;position:fixed;inset:0;z-index:40;pointer-events:none;visibility:hidden;transition:visibility 0s .7s}
+  .hm-pop{display:block;position:fixed;inset:0;z-index:40;pointer-events:none;visibility:hidden;transition:visibility 0s .7s;overflow:hidden}
   .hm-pop[data-open]{pointer-events:auto;visibility:visible;transition:none}
   .hm-bd{position:absolute;inset:0;background:rgba(17,17,18,.5);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);opacity:0;transition:opacity .5s}
   .hm-pop[data-open] .hm-bd{opacity:1}

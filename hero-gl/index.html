@@ -47,6 +47,8 @@
   @media (max-width:767px){ :root{--min-w:480px;--max-w:767px} }
   @media (max-width:479px){ :root{--min-w:320px;--max-w:479px;--unit:44} }
   html{font-size:calc(var(--fluid) / var(--design-w) * var(--unit));scroll-behavior:initial}
+  /* nimic nu poate lărgi pagina pe orizontală (pe iPhone se trăgea stânga / dreapta); clip, nu hidden, ca să meargă sticky */
+  html,body{overflow-x:clip;max-width:100%}
   html.lenis,html.lenis body{height:auto}
   .lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
   .lenis.lenis-stopped{overflow:clip}
@@ -333,7 +335,7 @@
     .duo-mihai{display:none}
     .duo-script{font-size:8rem}
     .logos .lg{flex:none;width:100%}
-    .part-script{left:auto;right:-.5rem;top:-5.5rem;font-size:6.5rem}
+    .part-script{left:auto;right:1.1rem;top:-5.5rem;font-size:6.5rem} /* în ecran (la -0.5rem ieșea în dreapta) */
     .s-part{padding-top:9rem}
     .s-manifest{padding:30vh 1.1rem 12vh}
     .man-text{font-size:3.1rem}
