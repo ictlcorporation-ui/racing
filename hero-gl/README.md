@@ -181,3 +181,4 @@ Casca-fantomă: sticlă mată albă (alpha 0.16) + linii subțiri deschise, doar
 - Imaginile de sub hero se încarcă leneș; `vercel.json`: cache 7 zile pentru `assets/`, 30 zile pentru `vendor/`, anteturi de securitate. Pagină: ~3,8 MB desktop / ~3,3 MB telefon (de la 8,2 MB).
 - SEO / distribuire: descriere, Open Graph + imaginea `assets/icons/og.jpg` (1200×630), Twitter card, JSON-LD Person, hreflang RO/EN, `robots.txt`, `sitemap.xml`, `404.html`.
 - `/api/season`: dacă eWRC nu răspunde, întoarce `{rounds: []}` (200, cache 1 h) — fără erori în consolă.
+- Preloader (client, 2026-09-27): rulează la fiecare vizită; varianta „o dată pe browser” doar cu `?preloader-once`.

@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5">
 <title>Mihai Manole — Pilot CNR</title>
-<script>/* preloader-ul rulează o singură dată pe browser (?preloader îl forțează) — vezi preloader.js */try{if(localStorage.getItem('mm-preloader')&&!/[?&]preloader/.test(location.search))document.documentElement.classList.add('pl-seen')}catch(e){}</script>
+<!-- preloader-ul „Mască MM” rulează la fiecare vizită (cerut de client); versiunea „o singură dată” se poate reactiva cu ?preloader-once, vezi preloader.js -->
+<script>try{if(/[?&]preloader-once/.test(location.search)&&localStorage.getItem('mm-preloader'))document.documentElement.classList.add('pl-seen')}catch(e){}</script>
 <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
