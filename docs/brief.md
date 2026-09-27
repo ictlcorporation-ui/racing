@@ -8,6 +8,7 @@
 
 ## Rezultate găsite public (de confirmat cu Mihai)
 - 2026 Raliul Maramureșului: locul 2 general (după Gîrtofan/Pulpea)
+  - CORECTURĂ (eWRC, verificat 2026-09-27): locul 2 era doar după ziua 1; pană duminică → locul 7 final. Restul 2026: Harghita P15, Argeș —, Cluj abandon PS5, Sibiu —, Iași P6, Vâlcea P8, Moldova anulat.
 - 2025 TESS Rally Brașov & Tg. Secuiesc: locul 3 general
 - 2025: două podiumuri absolute (ambele locul 3)
 - 2025 Raliul Clujului: locul 8 general
@@ -133,3 +134,22 @@
 - Cinemagrafe Kling 4K din pozele reale (cameră fixă): portrait, cockpit, dust, podium (ping-pong 10 s), wet (redare o dată, mașina se mișcă). În assets/cine, 1600px. Fallback la poze dacă lipsesc.
 - Banda roșie cu mașina decupată (background remover) traversând la scroll; titluri cu clip reveal; parallax în banda foto.
 - Credite: 5 cinemagrafe × 30 + decupaj 1 = 151. Jank max 39 ms.
+
+## site-v8 (2026-09-10) — „Din service pe probă” (film Seedance + pagină în stil Lando)
+- Decizii client: refacere de la zero; livrea unică A (Maramureș 2026, fără banner ALPHA, ref. _ASZ_-3452 / _ASZ_-4525); doar local; Higgsfield apelat de Claude unde e nevoie.
+- Film v8 (build/film8): ch1 = clipul cu casca existent (film7/ch1-720p), ch2 = cască→urcă în mașină (Seedance 480p draft, are o tăietură la ~1,5 s; clientul vrea scena rescrisă), ch3 = ușa se închide→pleacă pe drum (OK). Ancoră service: build/film8/anchors/02-incar-final.png (Nano Banana Pro, cort Budureasca, camion service). End ch3 = poza reală Shakedown-5601.
+- Nano Banana Pro respinge („nsfw”, nefacturat) prompturile cu „same face / recreate image 1”; merge cu „the driver shown in image 1”.
+- Credite: 59,18 → 38,68 (ancore 5,5 + 2 draft-uri 15). Master 720p după top-up. Plan Plus: 1080p/std blocate.
+- Site: site-v8/ (python3 site-v8/serve.py 8771). Anton + Playfair Display italic + Manrope (latin-ext). Motor canvas ImageBitmap, 181 cadre 1280 px (site-v8/frames), scroll nativ fără Lenis, GSAP doar pentru secțiuni. Secțiuni: marquee + card podium (cinemagraf), manifest cuvânt cu cuvânt, colaj (doar livrea A), Pe probă/În service, Sezonul 2026 + palmares, ticker, echipaj + mașină, parteneri, socials, footer. Verificat: build/shots8, jank max 21 ms (o rulare cu un spike izolat de 240 ms la încărcare).
+- De la Mihai: rezultate etape 2–7, Instagram/Facebook reale, e-mail contact, semnătură reală (scoasă din marquee până atunci), sponsorii confirmați.
+
+## Film v8.1 (2026-09-10) — hero frontal „ca Lando”, lanț complet continuu
+- Client: fața din poza nouă media/mihai/MHN - Service-4361.jpg (zâmbet, frontal), hero frontal centrat, mașina din service clar vizibilă. Fundalul vechi (perete estompat) respins.
+- Hero: build/film8/hero/hero-frontal-v1.png (= anchors/00-hero.png). Ancoră cască: anchors/01-helmeton.png.
+- Lanț: ch1 hero→cască (draft2/ch1, continuu, cameră fixă), ch2 cască→în mașină (draft2/ch2, continuu, camera îl urmărește), ch3 din draft/ch3. Joncțiuni verificate vizual (SSIM sub-citește: 0.64 / 0.47 dar cadrele sunt identice structural).
+- Master draft: build/film8/master-draft2/master.mp4 (361 cadre) → site-v8/frames 181 cadre; cadrul 1 = hero-ul 2K.
+- Credite: 38,68 → 13,68 (hero 2 variante 4 + hero frontal 2 + ancore cască 2+2 + 2 clipuri 15). Master 720p/fast: 3 × 17,5 = 52,5, după top-up.
+- Site: flash-ul de tăietură scos; jank max 31 ms.
+- v8.2: cap. 3 refăcut (draft3/ch3): iese din cort spre cameră, drum gol, end = poza reală _ASZ_-4525 (față 3/4). Clientul a respins varianta cu duba albă și peisajul. Master draft: build/film8/master-draft3. Seam #5b5350. Credite: 6,18.
+- Texte pe mașină: drift în mijlocul clipurilor; plan = master 720p Seedance + comprimare pe scroll a cadrelor cu texte stricate (speed map), cameră departe de texte.
+- v8.3 (feedback): mecanicii apar brusc în scena 2 pentru că lipsesc din hero/ancora cască. Fix planificat: hero cu mecanici de la început (build/film8/hero/hero-frontal-mech.png, 2 cr), apoi ancoră cască nouă + ch1 + ch2 regenerate. Blocat de credite (4,18). La master: ancoră cască 2 + ch1/ch2/ch3 720p 52,5 = ~55 cr; recomandat top-up ≥ 70.
