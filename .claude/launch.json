@@ -1,1 +1,4 @@
-{ "version": "0.0.1", "configurations": [ { "name": "racing-final", "url": "http://localhost:8770", "port": 8770 } ] }
+{ "version": "0.0.1", "configurations": [
+  { "name": "racing-final", "url": "http://localhost:8770", "port": 8770 },
+  { "name": "hero-gl", "runtimeExecutable": "python3", "runtimeArgs": ["hero-gl/serve.py", "8772"], "port": 8772 }
+] }
