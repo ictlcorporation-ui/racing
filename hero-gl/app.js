@@ -4,7 +4,10 @@
 import * as THREE from 'three';
 import { GLTFLoader } from './vendor/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from './vendor/addons/loaders/RGBELoader.js';
-import { initSite } from './site.js';
+// variantele de temă (a.html, b.html, c.html) își dau aici culorile fundalului 3D, modulul secțiunilor și intro-ul;
+// fără window.SITE_THEME pagina e cea de bază (index.html + site.js), neschimbată
+const THEME = window.SITE_THEME || {};
+const siteModule = import(new URL(THEME.module || './site.js', document.baseURI).href);
 import { createPreloader } from './preloader.js';
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -333,7 +336,7 @@ class Helmet {
       uLat: { value: 10 }, uLong: { value: 22 }, uExposure: { value: 1.0 }, uFade: { value: 0 }, uDraw: { value: 0 }, uErase: { value: 0 }, uScan: { value: 0 },
       tLogo: { value: makeLogoTexture() }, uDbg: { value: 0 }, uSolidOn: { value: PHOTO_HELMET ? 0 : 1 }, uHoverC: { value: new THREE.Vector2(0.5, 0.5) }, uHoverR: { value: 0 }, uHoverAsp: { value: 1 },
       // pe telefon casca transparentă e mai plină (umplere ×1.6, linii ×1.6), altfel abia se vede pe ecranul mic (cerut de client)
-      uGhostFill: { value: TOUCH_UI ? 1.6 : 1.0 }, uGhostWire: { value: TOUCH_UI ? 1.6 : 1.0 },
+      uGhostFill: { value: (TOUCH_UI ? 1.6 : 1.0) * (THEME.ghostFill ?? 1) }, // pe fundal închis (varianta A) umplerea albă se vede ca o coajă gri → mai puțină uGhostWire: { value: TOUCH_UI ? 1.6 : 1.0 },
       uArm: { value: 0.33 }, uArmPivot: { value: new THREE.Vector2(0.25, -0.33) }, // microfonul la gură: unghi (rad) și balamaua (z, y)
       uCut: { value: new THREE.Vector4(-0.48, 0.38, 0.45, -0.8) }, // cureaua de sub bărbie: sub y, în |x|, în spatele lui z; plus tot ce e sub y absolut
       uMicCut: { value: 0 }, // Venti: brațul de carbon „VENTI” al modelului rămâne (e ca în pozele oficiale); 1 = îl taie
@@ -609,12 +612,12 @@ void main(){
 
 // culorile fundalului topografic pe parcursul paginii (ca pe referință: olive → gri → crem; aici crem → carbon → gri → crem).
 // gl.scroll.bgHero + bgTrack = poziția pe această scară (0 hero, 1 carbon, 2 gri, 3 crem), condusă de scroll
-const BG_STOPS = [
+const BG_STOPS = (THEME.bgStops || [
   { bg: '#F1F0EB', fill: '#F9F8F4', line: '#C6C5BC', cursor: '#E4E3DA' },
   { bg: '#141413', fill: '#191918', line: '#34342f', cursor: '#1f1f1d' },
   { bg: '#5d5c57', fill: '#61605b', line: '#71706a', cursor: '#686761' },
   { bg: '#F1F0EB', fill: '#F6F5F0', line: '#D2D1C8', cursor: '#E6E5DC' },
-].map((s) => Object.fromEntries(Object.entries(s).map(([k, v]) => [k, new THREE.Color(v)])));
+]).map((s) => Object.fromEntries(Object.entries(s).map(([k, v]) => [k, new THREE.Color(v)])));
 
 // planul portretului (w × h, unități locale) și reperele din el: linia ochilor, vârful căștii, tăietura de jos, înălțimea încadrată pe lat,
 // lățimea încadrată pe îngust
@@ -640,7 +643,7 @@ class HeroGL {
     // valori conduse de scroll (un singur ScrollTrigger le calculează din progres)
     // bg: poziția pe scara de culori BG_STOPS; exit: portretul se dizolvă (0 → 1); idle: cursorul automat (doar cât se vede hero-ul)
     this.scroll = { dolly: 0, drop: 0, outline: 1, cursorIntensity: 1, helmetFlash: 0, bgHero: 0, bgTrack: 0, gray: 0, dim: 0, exit: 0, idle: 1 };
-    this.colors = { light: { head: '#2a2a27' } };
+    this.colors = { light: { head: THEME.headLine || '#2a2a27' } };
     this.rt = new THREE.WebGLRenderTarget(this.sizes.w * this.sizes.dpr, this.sizes.h * this.sizes.dpr, { depthBuffer: true, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter });
     this.time = 0;
     this.bindPointer();
@@ -877,7 +880,13 @@ const pre = createPreloader();
 gl.load((p) => pre.set(p)).then(() => {
   gsap.ticker.add((t, dtMs) => gl.update(Math.min(dtMs / 1000, 0.05)));
   // când literele MM devin fereastra, hero-ul trebuie să fie deja desenat în spate: portretul apare direct, restul intră cu intro-ul
-  pre.finish(() => { gl.state.reveal = 1.25; intro(); });
+  pre.finish(() => {
+    gl.state.reveal = 1.25;
+    siteModule.then((m) => {
+      if (!m.intro) return intro();
+      lenis.start(); m.intro({ gl, lenis, revealLines, drawPath }); bindScroll(); bindHelmet();
+    });
+  });
 }).catch((e) => { console.error(e); pre.error('Eroare la încărcare'); });
 
 function intro() {
@@ -900,7 +909,7 @@ function intro() {
 }
 
 function bindHelmet() {
-  const row = $('#helmetRow');
+  const row = $('#helmetRow') || document.createElement('div'); // variantele pot să nu aibă rândul „Casca”
   // hoverAnimation de pe referință: intrare 1.5 s expo.inOut, ieșire 1 s expo.inOut
   const on = () => gsap.to(gl.state, { helmet: 1, duration: 1.5, ease: 'expo.inOut', overwrite: 'auto' });
   // ieșirea: mai lentă decât pe referință (1 s expo.inOut) — cerut de client
@@ -937,8 +946,9 @@ function bindScroll() {
       sc.exit = ss(0.42, 0.9, p);
     },
   });
-  gsap.to('#heroTitle, #heroCard, #heroRight', { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '#heroTrack', start: 'top top', end: () => '+=' + innerHeight * 0.3, scrub: true } });
+  const fade = document.querySelectorAll(THEME.heroFade || '#heroTitle, #heroCard, #heroRight');
+  if (fade.length) gsap.to(fade, { opacity: 0, y: -40, ease: 'none', scrollTrigger: { trigger: '#heroTrack', start: 'top top', end: () => '+=' + innerHeight * 0.3, scrub: true } });
   ScrollTrigger.refresh();
   // secțiunile de după hero: după fonturi (SplitText împarte rândurile pe metricile finale)
-  document.fonts.ready.then(() => { initSite({ gl, lenis }); ScrollTrigger.refresh(); });
+  document.fonts.ready.then(() => siteModule).then((m) => { m.initSite({ gl, lenis }); ScrollTrigger.refresh(); });
 }

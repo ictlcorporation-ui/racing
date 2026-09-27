@@ -6,7 +6,12 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const BLOCK = { red: '#D81F26', dark: '#3b3c38', black: '#111112' };
 const IS_TOUCH = matchMedia('(hover: none) and (pointer: coarse)').matches;
 
+// culorile blocurilor și ale pistei vin din variabilele CSS ale paginii (variantele de temă le schimbă; implicit ca pe index.html)
+const cssVar = (n, d) => getComputedStyle(document.documentElement).getPropertyValue(n).trim() || d;
+
 export function initSite({ gl, lenis }) {
+  BLOCK.red = cssVar('--red', BLOCK.red); BLOCK.dark = cssVar('--tint', BLOCK.dark); BLOCK.black = cssVar('--black', BLOCK.black);
+  fgInterp = gsap.utils.interpolate(cssVar('--track-from', '#EDEBE4'), cssVar('--track-to', '#1a1a18'));
   anchors(lenis);
   const mm = gsap.matchMedia();
   // pista orizontală doar pe ecrane late (ca pe referință: ≥ 992 px); pe îngust colajul curge vertical
@@ -95,7 +100,7 @@ function statReveal() {
 /* ---------- pista orizontală (I_ pe referință) ----------
    secțiunea are înălțimea = lățimea pistei - lățimea ecranului; pista se mișcă de la „top bottom” la „bottom bottom” (scrub 1),
    iar fiecare poză alunecă 0 → 4rem în cadrul ei cât traversează ecranul. Fundalul topografic: carbon → gri → crem. */
-const fgInterp = gsap.utils.interpolate('#EDEBE4', '#1a1a18');
+let fgInterp = gsap.utils.interpolate('#EDEBE4', '#1a1a18');
 function trackColors(gl, p) {
   const t = gsap.utils.clamp(0, 1, (p - 0.28) / 0.64); const e = t * t * (3 - 2 * t);
   gl.scroll.bgTrack = e * 2;

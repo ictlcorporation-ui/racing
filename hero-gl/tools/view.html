@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ro"><head><meta charset="utf-8"><title>Casca brută</title>
+<style>html,body{margin:0;background:#fff}canvas{display:block;width:100%;height:auto}</style>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.min.js"}}</script>
+</head><body><canvas id="c"></canvas>
+<script type="module">
+// casca exact cum a ieșit din generator (materialele GLB originale, fără tăieturi), din 6 unghiuri → build/renders/<model>.png
+import * as THREE from 'three';
+import { GLTFLoader } from '../vendor/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from '../vendor/addons/loaders/RGBELoader.js';
+const model = new URLSearchParams(location.search).get('m') || 'helmet-venti';
+const W = 600, H = 600, cols = 3, rows = 2;
+const canvas = document.getElementById('c');
+const r = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+r.setPixelRatio(1); r.setSize(W * cols, H * rows, false); r.setScissorTest(true);
+r.toneMapping = THREE.ACESFilmicToneMapping;
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#ffffff');
+const pm = new THREE.PMREMGenerator(r);
+scene.environment = pm.fromEquirectangular(await new RGBELoader().loadAsync('../assets/hdri/studio_small_08_1k.hdr')).texture;
+const g = await new GLTFLoader().loadAsync(`../assets/models/${model}.glb`);
+const root = g.scene; const box = new THREE.Box3().setFromObject(root);
+root.position.sub(box.getCenter(new THREE.Vector3())); scene.add(root);
+const R = box.getSize(new THREE.Vector3()).length() * 0.62;
+const views = [['față', 0, 0], ['3/4 stânga', -45, 5], ['profil stânga', -90, 0], ['spate', 180, 10], ['3/4 dreapta', 45, 5], ['de jos (bărbie)', 0, -45]];
+const cam = new THREE.PerspectiveCamera(30, W / H, 0.01, 100);
+views.forEach(([name, yaw, pitch], i) => {
+  const x = (i % cols) * W, y = (rows - 1 - Math.floor(i / cols)) * H;
+  const a = THREE.MathUtils.degToRad(yaw), b = THREE.MathUtils.degToRad(pitch), d = R / Math.tan(THREE.MathUtils.degToRad(15));
+  cam.position.set(Math.sin(a) * Math.cos(b) * d, Math.sin(b) * d, Math.cos(a) * Math.cos(b) * d); cam.lookAt(0, 0, 0);
+  r.setViewport(x, y, W, H); r.setScissor(x, y, W, H); r.render(scene, cam);
+});
+// etichete
+const out = document.createElement('canvas'); out.width = W * cols; out.height = H * rows; const cx = out.getContext('2d');
+cx.drawImage(canvas, 0, 0); cx.font = '600 22px system-ui'; cx.fillStyle = '#222';
+views.forEach(([name], i) => cx.fillText(name, (i % cols) * W + 18, Math.floor(i / cols) * H + 36));
+cx.strokeStyle = '#ddd'; cx.lineWidth = 2; for (let i = 1; i < cols; i++) { cx.beginPath(); cx.moveTo(i * W, 0); cx.lineTo(i * W, H * rows); cx.stroke(); }
+cx.beginPath(); cx.moveTo(0, H); cx.lineTo(W * cols, H); cx.stroke();
+const blob = await new Promise((res) => out.toBlob(res, 'image/png'));
+await fetch(`http://127.0.0.1:8779/save?name=${model}.png`, { method: 'POST', body: blob });
+document.title = 'gata';
+</script></body></html>

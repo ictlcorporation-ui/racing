@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=5">
 <title>Mihai Manole — Pilot CNR</title>
+<script>/* preloader-ul rulează o singură dată pe browser (?preloader îl forțează) — vezi preloader.js */try{if(localStorage.getItem('mm-preloader')&&!/[?&]preloader/.test(location.search))document.documentElement.classList.add('pl-seen')}catch(e){}</script>
+<meta name="author" content="ICTL Corp Technology — ictlcorptechnology.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@700&family=Playfair+Display:ital,wght@0,500;1,500;1,600&family=Manrope:wght@400;500;600;700&display=swap&subset=latin-ext" rel="stylesheet">
@@ -227,11 +229,17 @@
   .part-script{position:absolute;z-index:0;left:24rem;top:1rem;font-family:'Caveat',cursive;font-weight:700;font-size:8.5rem;line-height:1;color:var(--red);transform:rotate(-10deg);pointer-events:none;opacity:.95;clip-path:inset(0 100% 0 0)}
   .logos{display:flex;align-items:center;justify-content:space-between;gap:3rem;padding:0 4rem;margin-top:7rem}
   .logos .lg{height:5rem;flex:1;display:flex;align-items:center;justify-content:center}
-  .logos .lg-bud{height:9rem}
+  .logos .lg-bud img{height:4.3rem;width:auto;max-width:none}
   .logos img{max-height:100%;max-width:100%;display:block}
   .logos .lg-mask{display:block;width:20rem;height:4.1rem;background:var(--ink);-webkit-mask:var(--src) center/contain no-repeat;mask:var(--src) center/contain no-repeat}
   .logos .lg-text{font-family:var(--d);font-size:3.2rem;letter-spacing:.02em;line-height:1}
   .logos .lg-text i{font-style:normal;color:var(--red)}
+  .logos .lg-ictl img{height:4.1rem;width:auto;max-width:none}
+  .logos a.lg{transition:opacity var(--dur) var(--ease)}
+  .logos a.lg:hover{opacity:.7}
+  .ictl-lock{display:flex;align-items:center;gap:1rem}
+  .ictl-lock i{width:1px;height:2.4rem;background:currentColor;opacity:.3}
+  .ictl-lock b{font-family:var(--b);font-weight:400;font-size:.95rem;letter-spacing:.32em;text-transform:uppercase;color:#7d7d78;white-space:nowrap}
 
   /* 9. footer: banda cu logo-uri (ca pe referință) */
   .foot{position:relative;z-index:1;background:var(--red);padding:1rem 1rem 0;color:var(--fg-dark)}
@@ -247,6 +255,17 @@
   .mq-text{flex:none;font-family:var(--d);font-size:2.2rem;line-height:1;color:var(--red);letter-spacing:.03em}
   .foot-bar{display:flex;justify-content:space-between;align-items:center;padding:.9rem .9rem 1rem;color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.06em}
   .foot-bar a{text-transform:uppercase;letter-spacing:.12em}
+  /* logo-urile ICTL în culorile lor (cerut: aceleași culori și pe fundal închis/roșu) */
+  .mq-img{flex:none;height:2.7rem;width:auto;display:block}
+  .mq-lock{flex:none;display:flex;align-items:center;gap:1.1rem}
+  .mq-lock i{width:1px;height:2rem;background:#fff;opacity:.3}
+  .mq-lock b{font-family:var(--b);font-weight:400;font-size:.9rem;letter-spacing:.32em;text-transform:uppercase;color:#9a9a96}
+  .foot-bar .foot-credit{display:flex;align-items:center;gap:.6rem;opacity:.85;transition:opacity var(--dur) var(--ease)}
+  .foot-bar .foot-credit:hover{opacity:1}
+  .fc-lock{display:flex;align-items:center;gap:.55rem}
+  .fc-lock img{height:1.35rem;width:auto;display:block}
+  .fc-lock i{width:1px;height:.9rem;background:#fff;opacity:.45}
+  .fc-lock b{font-weight:400;letter-spacing:.28em}
 
   @media (max-width:991px){
     .h-big{font-size:3.2rem}
@@ -284,7 +303,6 @@
     .duo-mihai{display:none}
     .duo-script{font-size:8rem}
     .logos .lg{flex:none;width:100%}
-    .logos .lg-bud{height:10rem}
     .part-script{left:auto;right:-.5rem;top:-5.5rem;font-size:6.5rem}
     .s-part{padding-top:9rem}
     .s-manifest{padding:30vh 1.1rem 12vh}
@@ -310,6 +328,7 @@
   .pl-foot{position:absolute;left:2rem;right:2rem;bottom:1.6rem;display:flex;justify-content:space-between;align-items:baseline;color:rgba(237,235,228,.6);font-family:var(--b);font-weight:700;font-size:.62rem;letter-spacing:.16em;text-transform:uppercase}
   .pl-foot b{font-family:var(--d);font-weight:400;font-size:1.6rem;letter-spacing:.02em;color:#EDEBE4}
   @media (max-width:767px){ .pl-foot{left:1.1rem;right:1.1rem} }
+  .pl-seen #plBoot{background:var(--offwhite) !important}
 </style>
 </head>
 <body data-theme="light" id="top">
@@ -522,8 +541,9 @@
       <p class="sec-p" data-lines="dark">Companiile care fac posibil sezonul echipajului Manole / Dorca în Campionatul Național de Raliuri.</p>
     </header>
     <div class="logos">
-      <div class="lg lg-bud"><img src="assets/logo/budureasca-full.svg" alt="Budureasca"></div>
-      <div class="lg"><span class="lg-mask" style="--src:url(assets/logo/ictl.svg)" role="img" aria-label="ICTL Corp"></span></div>
+      <div class="lg lg-bud"><img src="assets/logo/budureasca-script.svg" alt="Budureasca"></div>
+      <a class="lg lg-ictl" href="https://ictlcorp.com/" target="_blank" rel="noopener"><img src="assets/logo/ictl-corp-green-ink.svg" alt="ICTL Corp"></a>
+      <a class="lg lg-ictl" href="https://ictlcorptechnology.com/" target="_blank" rel="noopener"><span class="ictl-lock"><img src="assets/logo/ictl-tech-ink.svg" alt="ICTL Corp Technology"><i></i><b>Technology</b></span></a>
       <div class="lg"><span class="lg-text">NEXT <i>ENERGY</i></span></div>
     </div>
   </section>
@@ -541,16 +561,18 @@
       <div class="mq-scroll">
         <div class="mq-coll">
           <span class="mq-logo" style="--src:url(assets/logo/budureasca-script.svg);width:12.5rem" role="img" aria-label="Budureasca"></span>
-          <span class="mq-logo" style="--src:url(assets/logo/ictl.svg);width:13.2rem" role="img" aria-label="ICTL Corp"></span>
+          <img class="mq-img" src="assets/logo/ictl-corp-green.svg" alt="ICTL Corp">
+          <span class="mq-lock"><img class="mq-img" src="assets/logo/ictl.svg" alt="ICTL Corp Technology"><i></i><b>Technology</b></span>
           <span class="mq-text">NEXT ENERGY</span>
           <span class="mq-logo" style="--src:url(assets/logo/budureasca-script.svg);width:12.5rem" role="img" aria-label="Budureasca"></span>
-          <span class="mq-logo" style="--src:url(assets/logo/ictl.svg);width:13.2rem" role="img" aria-label="ICTL Corp"></span>
+          <img class="mq-img" src="assets/logo/ictl-corp-green.svg" alt="ICTL Corp">
+          <span class="mq-lock"><img class="mq-img" src="assets/logo/ictl.svg" alt="ICTL Corp Technology"><i></i><b>Technology</b></span>
           <span class="mq-text">NEXT ENERGY</span>
         </div>
       </div>
     </div>
   </div>
-  <div class="foot-bar"><span>© 2026 Mihai Manole. Toate drepturile rezervate.</span><a href="#top" data-top>Înapoi sus ↑</a></div>
+  <div class="foot-bar"><span>© 2026 Mihai Manole. Toate drepturile rezervate.</span><a class="foot-credit" href="https://ictlcorptechnology.com/" target="_blank" rel="noopener">Site realizat de <span class="fc-lock"><img src="assets/logo/ictl.svg" alt="ICTL Corp Technology"><i></i><b>Technology</b></span></a><a href="#top" data-top>Înapoi sus ↑</a></div>
 </footer>
 
 <script src="vendor/gsap.min.js"></script>

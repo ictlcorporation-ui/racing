@@ -12,7 +12,12 @@ const TOUCH = matchMedia('(hover: none) and (pointer: coarse)').matches;
 const T = TOUCH ? { min: 3.0, hold: 1.1, zoom: 1.8 } : { min: 1.6, hold: 0.8, zoom: 1.5 };
 const MIN_TIME = T.min; // s — și pe conexiuni rapide traseul are timp să se vadă
 
+// o singură dată pe browser: după prima rulare completă, la vizitele următoare doar coperta simplă cât se încarcă (din cache)
+const SEEN_KEY = 'mm-preloader';
+const SEEN = document.documentElement.classList.contains('pl-seen'); // setat în <head>, înainte de prima desenare
+
 export function createPreloader() {
+  if (SEEN) return createQuickCover();
   const W = 1600, H = 1000, cx = W / 2, cy = H / 2 - 20;
   const narrow = innerWidth / innerHeight < 0.75, S0 = narrow ? 5.1 : 6.2;
   // curbe de nivel (ca fundalul site-ului), generate
@@ -68,7 +73,7 @@ export function createPreloader() {
           const mg = root.querySelector('#plMaskG'), vis = root.querySelector('#plVis'), mp = mg.querySelector('path');
           const z = { k: S0 };
           const set = () => { const tr = `translate(${cx} ${cy}) scale(${z.k}) translate(-36 -33)`; mg.setAttribute('transform', tr); vis.setAttribute('transform', tr); };
-          gsap.timeline({ onComplete: () => { topoTw.kill(); root.remove(); resolve(); } })
+          gsap.timeline({ onComplete: () => { topoTw.kill(); root.remove(); try { localStorage.setItem(SEEN_KEY, '1'); } catch (e) {} resolve(); } })
             // monograma stă plină (roșie, cu „69” la capăt) o clipă, abia apoi se deschide site-ul
             .to(car, { opacity: 0, duration: 0.3 }, T.hold - 0.3)
             .add(() => { mp.setAttribute('opacity', 1); onOpen && onOpen(); }, T.hold)
@@ -79,6 +84,22 @@ export function createPreloader() {
             .set(root, { pointerEvents: 'none' }, T.hold + 0.45 + T.zoom * 0.95);
         };
         gsap.ticker.add(wait);
+      });
+    },
+  };
+}
+
+// vizitele următoare: coperta din HTML (culoarea hero-ului) stă cât se încarcă, apoi se stinge și pornește intro-ul
+function createQuickCover() {
+  const root = document.getElementById('plBoot');
+  return {
+    set() {},
+    error(msg) { if (root) { root.textContent = msg; root.style.cssText += ';display:grid;place-items:center;font:700 .8rem var(--b)'; } },
+    finish(onOpen) {
+      onOpen && onOpen();
+      return new Promise((resolve) => {
+        if (!root) return resolve();
+        gsap.to(root, { opacity: 0, duration: 0.6, ease: 'power1.out', onComplete: () => { root.remove(); resolve(); } });
       });
     },
   };
