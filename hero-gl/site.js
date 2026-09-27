@@ -14,25 +14,33 @@ export function initSite({ gl, lenis }) {
   fgInterp = gsap.utils.interpolate(cssVar('--track-from', '#EDEBE4'), cssVar('--track-to', '#1a1a18'));
   anchors(lenis);
   const mm = gsap.matchMedia();
-  // pista orizontală doar pe ecrane late (ca pe referință: ≥ 992 px); pe îngust colajul curge vertical
-  mm.add('(min-width: 992px)', () => {
-    const h = horizontalTrack(gl);
-    lineReveals($$('[data-lines]', $('.s-track')), h);
-  });
-  mm.add('(max-width: 991px)', () => {
-    verticalTrack(gl);
-    lineReveals($$('[data-lines]', $('.s-track')));
-  });
+  // variantele de conținut (content.js) pot scoate secțiuni: fiecare efect rulează doar dacă secțiunea lui există
+  const has = (sel) => !!$(sel);
+  const run = (sel, fn) => { if (has(sel)) fn(); };
+  if (has('[data-horizontal]')) {
+    // pista orizontală doar pe ecrane late (ca pe referință: ≥ 992 px); pe îngust colajul curge vertical
+    mm.add('(min-width: 992px)', () => {
+      const h = horizontalTrack(gl);
+      lineReveals($$('[data-lines]', $('.s-track')), h);
+    });
+    mm.add('(max-width: 991px)', () => {
+      verticalTrack(gl);
+      lineReveals($$('[data-lines]', $('.s-track')));
+    });
+  } else {
+    // fără pistă: fundalul trece din carbon în crem la finalul manifestului (secțiunile deschise se bazează pe el)
+    ScrollTrigger.create({ trigger: '.s-manifest', start: 'bottom 90%', end: 'bottom 30%', scrub: true, onUpdate: (self) => { gl.scroll.bgTrack = self.progress * 2; } });
+  }
   lineReveals($$('[data-lines]').filter((el) => !el.closest('.s-track')));
   statReveal();
-  duo();
-  bleed();
-  darkBlock();
-  carSection();
-  crew();
+  run('.s-duo', duo);
+  run('.s-bleed', bleed);
+  run('.dark-bulge', darkBlock);
+  run('.car-run', carSection);
+  run('.s-crew', crew);
   calendarPeek();
   fan();
-  partners();
+  run('.s-part', partners);
   $$('[data-marquee]').forEach(marquee);
   themeWatcher(gl);
 }

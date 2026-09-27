@@ -53,6 +53,8 @@ body[data-theme="dark"] .nav::before{background:rgba(17,17,18,.66);border-bottom
 .mn[data-open] .mn-panel{transform:none}
 .mn-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:2.4rem}
 .mn-head svg{width:4.4rem;height:auto;color:var(--ink)}
+/* desktop / tabletă: monograma la mijlocul panoului (client), X-ul în dreapta */
+@media (min-width:768px){ .mn-head{display:grid;grid-template-columns:1fr auto 1fr} .mn-head svg{grid-column:2} .mn-x{grid-column:3;justify-self:end} }
 .mn-list{list-style:none;border-top:1px solid rgba(26,26,24,.14)}
 .mn-list li{position:relative;isolation:isolate;border-bottom:1px solid rgba(26,26,24,.14);opacity:0;transform:translateX(2.5rem);transition:opacity .5s,transform .8s var(--ease);transition-delay:calc(var(--o) * (.3s + var(--i) * .045s))}
 .mn[data-open] .mn-list li{opacity:1;transform:none}

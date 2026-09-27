@@ -4,7 +4,7 @@ set -e
 cd "$(dirname "$0")/.."
 D=build/hero-gl-mihai
 mkdir -p "$D/assets/models"
-cp index.html app.js site.js preloader.js nav.js nav.css i18n.js hero-left.js hero-left.css live.js foot.js foot.css "$D/"
+cp index.html app.js site.js preloader.js nav.js nav.css i18n.js hero-left.js hero-left.css live.js foot.js foot.css robots.txt sitemap.xml vercel.json 404.html "$D/"
 rm -rf "$D/api" && mkdir -p "$D/api" && cp api/*.mjs "$D/api/"  # funcția /api/season (eWRC)
 rm -rf "$D/vendor" && cp -R vendor "$D/"
 rm -rf "$D/assets/hdri" "$D/assets/tex" "$D/assets/img" "$D/assets/logo" "$D/assets/icons" && cp -R assets/hdri assets/tex assets/img assets/logo assets/icons "$D/assets/"

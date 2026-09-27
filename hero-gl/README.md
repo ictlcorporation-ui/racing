@@ -166,3 +166,18 @@ Casca-fantomă: sticlă mată albă (alpha 0.16) + linii subțiri deschise, doar
 - Hero stânga (`hero-left.js/.css`): „Fiecare secundă contează.” + cardul cu ultimul rezultat și fișa echipajului (desktop); pe telefon fără titlu, banda de cronometraj jos (urcă deasupra barei Safari: 100lvh − 100svh) + fișa în fereastră. Cifrele se calculează din rândurile „Etapele” (`data-end`, `data-ewrc`). Pe telefon Mihai stă cu 2% mai jos în loc de 6%.
 - Date live (`api/_ewrc.mjs`, `api/season.mjs`, `live.js`): rezultatele citite de pe eWRC-results; local merg (`serve.py` → `/api/season`), pe Vercel eWRC răspunde 403 (Cloudflare blochează serverele) → pagina rămâne pe rândurile din HTML. De rezolvat mai târziu (sarcină programată pe Mac / GitHub Actions / proxy).
 - „Hai să vorbim” (`foot.js/.css`): titlu mai mare, câte o poză înclinată pe laterale (noapte / alb-negru), mail + Instagram ca butoane mari; creditul din banda roșie centrat (grilă 1fr auto 1fr) și logo-ul ICTL alb acolo.
+
+## Cum adaugi informații noi (de la Mihai)
+- **Texte**: direct în `index.html`, în secțiunea respectivă (manifest `#manifest`, pista `#sezon`, mașina `#masina`, echipajul `#echipa`, partenerii `#parteneri`, footer). **Orice text nou trebuie adăugat și în `i18n.js`** (dicționarul RO → EN), altfel pe `?lang=en` rămâne în română.
+- **Etape / rezultate**: un rând `li.cal-row` în `#calendar` cu `data-ewrc="<id eWRC>" data-end="AAAA-LL-ZZ"` (ultima zi). Hero-ul, banda de pe telefon și meniul își iau singure din rânduri „Ultimul rezultat”, „Urmează”, „Cel mai bun”. Când merg datele live (vezi mai sus), rândurile se completează singure.
+- **Poze**: în `assets/img/` ca `.webp` (≈ 2000 px pe latura lungă, calitate 80–85); în HTML cu `loading="lazy" decoding="async"` (tot ce e sub hero).
+- **Parteneri**: logo-urile în `assets/logo/` (SVG); apar în `#parteneri` și în banda din footer (`.foot-marquee`, de 2 ori, pentru bucla continuă).
+- **Secțiuni scoase** (pe probă / în service, poza pe tot ecranul, galeria-evantai): codul lor de animație a rămas în `site.js` și rulează doar dacă secțiunea există — le poți pune înapoi din istoricul git (commit `3d3767d`).
+- **Deploy**: `sh tools/deploy.sh` (copiază fișierele în `build/hero-gl-mihai`, unde e legătura cu Vercel — nu șterge folderul acela). Fișier nou în rădăcină → adaugă-l în lista din `deploy.sh`.
+- **Domeniu**: https://mihaimanole.com (GoDaddy: A @ → 216.198.79.1 și 64.29.17.1, CNAME www → Vercel; restul DNS neatins, fără MX — mailul contact@ nu e încă configurat). Adresele din `index.html`, `robots.txt`, `sitemap.xml` sunt deja pe domeniu.
+
+## Performanță și setări (2026-09-27)
+- Texturile portretului / căștii: WebP q90 (identice vizual cu JPEG-ul 4K, PSNR 45 dB); pe telefoane varianta de 2560 px (`-m.webp`). JPEG-urile rămân pentru unelte.
+- Imaginile de sub hero se încarcă leneș; `vercel.json`: cache 7 zile pentru `assets/`, 30 zile pentru `vendor/`, anteturi de securitate. Pagină: ~3,8 MB desktop / ~3,3 MB telefon (de la 8,2 MB).
+- SEO / distribuire: descriere, Open Graph + imaginea `assets/icons/og.jpg` (1200×630), Twitter card, JSON-LD Person, hreflang RO/EN, `robots.txt`, `sitemap.xml`, `404.html`.
+- `/api/season`: dacă eWRC nu răspunde, întoarce `{rounds: []}` (200, cache 1 h) — fără erori în consolă.

@@ -6,7 +6,8 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control', 'public, s-maxage=21600, stale-while-revalidate=604800');
     res.status(200).json(data);
   } catch (e) {
-    res.setHeader('Cache-Control', 'no-store');
-    res.status(502).json({ error: String(e) });
+    // eWRC indisponibil (sau blochează serverul): răspuns gol, păstrat 1 h — pagina rămâne pe datele din HTML, fără erori în consolă
+    res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+    res.status(200).json({ rounds: [], error: String(e) });
   }
 }

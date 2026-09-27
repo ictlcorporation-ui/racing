@@ -13,7 +13,7 @@ const LINKS = [
   { id: 'galerie', t: t('Galerie', 'Gallery') },
   { id: 'parteneri', t: t('Parteneri', 'Partners') },
   { id: 'contact', t: 'Contact' },
-];
+].filter((l) => l.id === 'contact' || document.getElementById(l.id)); // variantele de conținut (content.js) pot scoate secțiuni
 const num = (i) => String(i + 1).padStart(2, '0');
 // Mihai are doar Instagram (fără X); contactul e pe mail
 const IG_URL = 'https://www.instagram.com/mihaimanolerallydriver/', MAIL = 'contact@mihaimanole.com';

@@ -654,7 +654,10 @@ class HeroGL {
     const loader = new THREE.TextureLoader();
     const files = ['head-diffuse.jpg', 'head-alpha.png', 'head-depth.png', 'helmet-diffuse.jpg', 'helmet-alpha.png', 'helmet-depth.png'];
     let done = 0; const tex = {};
-    await Promise.all(files.map((f) => new Promise((res, rej) => loader.load('assets/tex/' + f, (t) => {
+    // fotografiile (portret + casca) vin ca WebP (q90, identice vizual cu JPEG-ul 4K, de 2,5× mai mici); pe ecranele mici, varianta de 2560 px
+    const small = matchMedia('(pointer: coarse)').matches && Math.min(innerWidth, innerHeight) < 900; // doar telefoane / tablete mici
+    const url = (f) => (f.endsWith('-diffuse.jpg') ? f.replace('.jpg', small ? '-m.webp' : '.webp') : f);
+    await Promise.all(files.map((f) => new Promise((res, rej) => loader.load('assets/tex/' + url(f), (t) => {
       t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = true; t.minFilter = THREE.LinearMipmapLinearFilter; t.anisotropy = 4;
       tex[f] = t; onProgress(++done / files.length); res();
     }, undefined, rej))));
