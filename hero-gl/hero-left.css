@@ -1,6 +1,8 @@
 /* ============ zona din stânga a hero-ului: replica + cardul (ultimul rezultat + fișa echipajului), vezi hero-left.js ============ */
 .hx{opacity:0;transform:translateY(.6rem)}
 .hero-card{width:13rem}
+/* eticheta roșie stă sub linia conturului (colțul teșit de sus), nu peste ea (client) */
+@media (min-width:992px){ .hero-card{padding-top:3rem} }
 .hero-card a{display:block}
 
 /* titlul: frază în loc de nume (numele e deja în bară) */
@@ -57,7 +59,7 @@
   /* banda de cronometraj */
   .hm-ticker{flex:1;min-width:0;display:flex;align-items:stretch;height:4.4rem;border:0;padding:0 .4rem 0 0;cursor:pointer;border-radius:99rem;overflow:hidden;background:rgba(17,17,18,.88);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:var(--offwhite);text-align:left;box-shadow:0 4px 18px rgba(0,0,0,.22)}
   .hm-ticker .flag{flex:none;width:1.4rem;margin:.9rem 0 .9rem 1.1rem;border-radius:.2rem;background:repeating-conic-gradient(#fff 0 25%,#111112 0 50%) 0 0/.46rem .46rem}
-  .hm-ticker .track{flex:1;overflow:hidden;display:flex;align-items:center;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .hm-ticker .hm-track{flex:1;overflow:hidden;display:flex;align-items:center;-webkit-mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
   .hm-ticker .run{display:flex;align-items:center;white-space:nowrap;animation:hmRun 26s linear infinite}
   .hm-ticker .it{display:inline-flex;align-items:baseline;gap:.6rem;padding:0 1rem}
   .hm-ticker .it .lbl{opacity:.55}

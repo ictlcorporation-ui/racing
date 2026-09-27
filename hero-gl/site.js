@@ -112,7 +112,7 @@ let fgInterp = gsap.utils.interpolate('#EDEBE4', '#1a1a18');
 function trackColors(gl, p) {
   const t = gsap.utils.clamp(0, 1, (p - 0.28) / 0.64); const e = t * t * (3 - 2 * t);
   gl.scroll.bgTrack = e * 2;
-  $('.track').style.setProperty('--track-fg', fgInterp(gsap.utils.clamp(0, 1, (e * 2 - 1.05) / 0.4)));
+  $('.s-track .track').style.setProperty('--track-fg', fgInterp(gsap.utils.clamp(0, 1, (e * 2 - 1.05) / 0.4)));
 }
 function horizontalTrack(gl) {
   const sec = $('[data-horizontal]'), track = $('.track', sec);
@@ -130,7 +130,9 @@ function horizontalTrack(gl) {
 }
 function verticalTrack(gl) {
   const sec = $('[data-horizontal]'); sec.style.height = '';
-  ScrollTrigger.create({ trigger: sec, start: 'top 80%', end: 'bottom bottom', scrub: true, onUpdate: (self) => trackColors(gl, 0.28 + self.progress * 0.72) });
+  // pe îngust pozele stau una sub alta: dacă fundalul s-ar schimba pe toată lungimea, la mijloc și fundalul și textul ar fi gri
+  // (scrisul nu se mai vedea — client). Trecerea carbon → crem se face scurt, cât intră secțiunea; conținutul stă apoi pe crem, cu text închis.
+  ScrollTrigger.create({ trigger: sec, start: 'top 95%', end: 'top 35%', scrub: true, onUpdate: (self) => trackColors(gl, 0.28 + self.progress * 0.72) });
   $$('.t-img img', sec).forEach((img) => {
     gsap.fromTo(img, { x: 0 }, { x: '4rem', ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
   });

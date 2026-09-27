@@ -122,7 +122,7 @@ class Fluid {
   }
   pass(mat, target, scene = this.scene) { if (scene === this.scene) this.quad.material = mat; this.renderer.setRenderTarget(target); this.renderer.render(scene, this.cam); }
   // un pas al simulării: diff/coords în coordonate NDC (-1..1), ca pe referință
-  step(diff, coords, intensity = 1) {
+  step(diff, coords, intensity = 1, extra = null) {
     if (!Number.isFinite(diff.x + diff.y + coords.x + coords.y + intensity)) { diff.set(0, 0); if (!Number.isFinite(coords.x + coords.y)) return; intensity = 0; }
     const r = this.renderer, ac = r.autoClear; r.autoClear = false;
     const f = this.f, M = this.m;
@@ -131,6 +131,12 @@ class Fluid {
     u.force.value.set(diff.x / 2 * LF_OPT.force * intensity, diff.y / 2 * LF_OPT.force * intensity);
     u.center.value.set(Math.min(Math.max(coords.x, -1 + E + this.px.x * 2), 1 - E - this.px.x * 2), Math.min(Math.max(coords.y, -1 + I + this.px.y * 2), 1 - I - this.px.y * 2));
     this.pass(null, f.vel1, this.forceScene);
+    // a doua sursă în același pas (zigzagul automat cât timp se mișcă și mouse-ul): încă o pensulă peste viteze
+    if (extra && Number.isFinite(extra.diff.x + extra.diff.y + extra.coords.x + extra.coords.y)) {
+      u.force.value.set(extra.diff.x / 2 * LF_OPT.force * intensity, extra.diff.y / 2 * LF_OPT.force * intensity);
+      u.center.value.set(Math.min(Math.max(extra.coords.x, -1 + E + this.px.x * 2), 1 - E - this.px.x * 2), Math.min(Math.max(extra.coords.y, -1 + I + this.px.y * 2), 1 - I - this.px.y * 2));
+      this.pass(null, f.vel1, this.forceScene);
+    }
     M.div.uniforms.velocity.value = f.vel1.texture; this.pass(M.div, f.div);
     let src = f.p0, dst = f.p1;
     M.poisson.uniforms.divergence.value = f.div.texture;
@@ -154,8 +160,10 @@ const HEAD_T = { wait: 0.6, fill: 2.2, hold: 1.2 };
 class IdleCursor {
   constructor() {
     this.isMoving = true; this.prev = true; this.progress = { x: 0, y: 0 }; this.cursor = new THREE.Vector2();
-    this.initial = setTimeout(() => { this.isMoving = false; }, 2500);
-    const move = () => { this.isMoving = true; clearTimeout(this.initial); clearTimeout(this.to); this.to = setTimeout(() => { this.isMoving = false; }, 2000); };
+    // zigzagul („ghost-ul”) pornește după intro și merge continuu, fără pauză când se mișcă mouse-ul (client);
+    // isMoving spune doar dacă urma mouse-ului se adaugă peste el
+    this.initial = setTimeout(() => { this.isMoving = false; this.tl.play(0); }, 2500);
+    const move = () => { this.isMoving = true; clearTimeout(this.to); this.to = setTimeout(() => { this.isMoving = false; }, 400); };
     // pe ecranele tactile (ca pe referință) degetul nu contează: cursorul automat rulează mereu
     if (!IS_TOUCH) document.addEventListener('mousemove', move);
     const p = this.progress;
@@ -165,11 +173,9 @@ class IdleCursor {
       .fromTo(p, { y: 0 }, { y: 1, duration: D, ease: 'none' }, 0).fromTo(p, { x: 0 }, { x: 1, duration: D, ease: 'power1.inOut' }, 0)
       .fromTo(p, { y: 1 }, { y: 0, duration: D, ease: 'none' }, B).fromTo(p, { x: 1 }, { x: 0, duration: D, ease: 'power1.inOut' }, B);
   }
-  restart() { if (!this.isMoving) this.tl.seek(0); } // zigzagul reia de sus (după ce casca umplută de pe cap se golește)
+  restart() { this.tl.seek(0); } // zigzagul reia de sus (după ce casca umplută de pe cap se golește)
   update() {
-    if (!this.isMoving) this.cursor.set(-Math.cos(this.progress.x * Math.PI * 4) * 0.75, Math.cos(this.progress.y * Math.PI) * 0.5);
-    if (this.isMoving !== this.prev) { if (!this.isMoving) { this.tl.seek(0); this.tl.play(); } else this.tl.pause(); }
-    this.prev = this.isMoving;
+    this.cursor.set(-Math.cos(this.progress.x * Math.PI * 4) * 0.75, Math.cos(this.progress.y * Math.PI) * 0.5);
   }
 }
 
@@ -808,7 +814,12 @@ class HeroGL {
     if (this.fluidAcc > 1 / 60) {
       this.fluidAcc %= 1 / 60;
       let c = this.ndc;
-      if (!(this.idle.isMoving && this.hasMouse) && this.scroll.idle > 0.5) {
+      const mouseOn = this.idle.isMoving && this.hasMouse;
+      // poziția zigzagului, calculată mereu (sursă principală fără mouse, a doua sursă cu mouse)
+      const h0 = this.helmNdc || { x: 0, y: 0.2, rx: 0.3, ry: 0.4 };
+      const ic = this.idleC2 || (this.idleC2 = new THREE.Vector2());
+      ic.set(h0.x + this.idle.cursor.x / 0.75 * h0.rx * 1.15, h0.y + this.idle.cursor.y / 0.5 * h0.ry * 1.05);
+      if (!mouseOn && this.scroll.idle > 0.5) {
         // zigzagul de pe referință e centrat pe ecran, unde stă fața lui Lando; aici îl centrăm pe fața lui Mihai (linia ochilor)
         // zigzagul de pe referință acoperă tot ecranul (fața lui Lando îl umple); aici casca e doar în centru-sus, așa că
         // zigzagul e încadrat în conturul căștii (+ puțin aer) — altfel cea mai mare parte a timpului nu dezvăluia nimic
@@ -819,7 +830,14 @@ class HeroGL {
       if (!this.idle.isMoving && this.scroll.idle > 0.5) this.mouse.target.set(c.x, c.y * 0.6);
       this.coords.copy(c); this.diff.subVectors(this.coords, this.coordsOld); this.coordsOld.copy(this.coords);
       if (this.diff.length() > 0.5) this.diff.set(0, 0); // salt (prima mișcare, ieșire/intrare în fereastră)
-      this.fluid.step(this.diff, this.coords, INSPECT ? 0 : this.scroll.cursorIntensity * (this.state.rendering ? 1 : 0));
+      let extra = null;
+      if (mouseOn && this.scroll.idle > 0.5) {
+        const io = this.idleOld || (this.idleOld = ic.clone()), idf = this.idleDiff || (this.idleDiff = new THREE.Vector2());
+        idf.subVectors(ic, io); if (idf.length() > 0.5) idf.set(0, 0);
+        extra = { diff: idf, coords: ic };
+      }
+      (this.idleOld || (this.idleOld = new THREE.Vector2())).copy(ic);
+      this.fluid.step(this.diff, this.coords, INSPECT ? 0 : this.scroll.cursorIntensity * (this.state.rendering ? 1 : 0), extra);
     }
     if (!Number.isFinite(this.mouse.target.x + this.mouse.target.y)) this.mouse.target.set(0, 0);
     this.mouse.update(dt);

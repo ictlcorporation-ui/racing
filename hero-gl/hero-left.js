@@ -78,7 +78,7 @@
   const helmBtn = `<button class="hm-helmet" aria-label="${t('Arată casca', 'Show the helmet')}" aria-pressed="false">${ICON_HELMET}</button>`;
   const item = ([k, v, sub, [a, b, c]]) => `<span class="it"><span class="lbl"${lv(a)}>${k}</span><b${lv(b)}>${v}</b><span class="sub"${lv(c)}>${sub}</span></span>`;
   const seq = facts.map(item).join('<span class="sep">/</span>') + '<span class="sep">/</span>';
-  mob.innerHTML = `<button class="hm-ticker" aria-haspopup="dialog" aria-label="${t('Fișa echipajului', 'Crew sheet')}"><span class="flag"></span><span class="track"><span class="run">${seq}${seq}</span></span></button>${helmBtn}`;
+  mob.innerHTML = `<button class="hm-ticker" aria-haspopup="dialog" aria-label="${t('Fișa echipajului', 'Crew sheet')}"><span class="flag"></span><span class="hm-track"><span class="run">${seq}${seq}</span></span></button>${helmBtn}`;
   hero.appendChild(mob);
 
   // fereastra cu fișa completă
